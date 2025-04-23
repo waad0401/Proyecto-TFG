@@ -1,0 +1,22 @@
+[frontend_master]
+# CHANGE_MASTER_1
+
+[frontend]
+# CHANGE_FRONT_1
+# CHANGE_FRONT_2
+
+[backend]
+# CHANGE_BACK_1
+
+[nfs]
+# CHANGE_NFS_1
+
+[loadbalancer]
+# CHANGE_LOAD_1
+
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/claves.pem
+ansible_ssh_common_args='-o StrictHostKeyChecking=accept-new'
+
