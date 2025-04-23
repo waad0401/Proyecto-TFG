@@ -18,7 +18,8 @@ echo "Instalacion casi de atendida solo se necesitan para aws que es ahora , se 
 read p
 echo "Instalacion aws"
 echo "Actualizando los paquetes ..."
-apt update && apt install unzip -y > /dev/null
+apt update > /dev/null && apt install unzip -y > /dev/null
+rm -rf /tmp/* > /dev/null
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
 unzip /tmp/awscliv2.zip -d /tmp
 /tmp/aws/install
@@ -40,7 +41,7 @@ aws configure
 
 echo "Instalacion de terraform"
 echo "Actualizacion de paquetes y dependencias necesarias"
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common > /dev/null
 
 # Install the HashiCorp GPG key.
 wget -O- https://apt.releases.hashicorp.com/gpg | \
@@ -59,10 +60,10 @@ sudo tee /etc/apt/sources.list.d/hashicorp.list
 
 echo "Instalamos el paquete de terraform "
 #Download the package information from HashiCorp.
-sudo apt update
+sudo apt update > /dev/null
 
 # Install Terraform from the new repository.
-sudo apt-get install terraform -y
+sudo apt-get install terraform -y > /dev/null
 
 
 ########################################
@@ -73,4 +74,5 @@ sudo apt-get install terraform -y
 ########################################
 ########################################
 
-apt install ansible -y
+echo "Instalacion de ansible "
+apt install ansible -y > /dev/null
