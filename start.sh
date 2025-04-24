@@ -76,3 +76,11 @@ sudo apt-get install terraform -y > /dev/null
 
 echo "Instalacion de ansible "
 apt install ansible -y > /dev/null
+
+####################################################
+
+# Now we create the infrastrucutre and prepare the ips for ansible
+# 
+
+
+
