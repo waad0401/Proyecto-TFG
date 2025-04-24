@@ -2,6 +2,7 @@ provider "aws" {
   region = var.region
 }
 
+
 # Creacion de los grupos de seguridad
 resource "aws_security_group" "frontend" {
   name        = var.sg_frontend
@@ -97,7 +98,7 @@ resource "aws_instance" "backend" {
 }
 
 resource "aws_instance" "frontend-02" {
-  ami             = var.ami_id
+  ami             = var.ami_id_mod
   instance_type   = var.tipo_instancia
   key_name        = var.key_name
   security_groups = [aws_security_group.frontend.name]
@@ -108,7 +109,7 @@ resource "aws_instance" "frontend-02" {
 }
 
 resource "aws_instance" "frontend-01" {
-  ami             = var.ami_id
+  ami             = var.ami_id_mod
   instance_type   = var.tipo_instancia
   key_name        = var.key_name
   security_groups = [aws_security_group.frontend.name]

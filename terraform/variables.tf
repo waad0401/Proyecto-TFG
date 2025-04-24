@@ -63,6 +63,12 @@ variable "ami_id" {
   default     = "ami-04b4f1a9cf54c11d0"
 }
 
+variable "ami_id_mod" {
+  description = "Identificador de la AMI personalizada con ubuntu"
+  type        = string
+  default     = "ami-04eff093747b0c757"
+}
+
 variable "tipo_instancia" {
   description = "Tipo de instancia"
   type        = string
