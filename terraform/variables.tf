@@ -45,12 +45,6 @@ variable "sg_nfs" {
   default     = "sg_nfs"
 }
 
-variable "sg_loadbalancer" {
-  description = "grupo seguridad loadbalancer"
-  type        = string
-  default     = "sg_loadbalancer"
-}
-
 variable "sg_description" {
   description = "Descripción del grupo de seguridad"
   type        = string
@@ -61,12 +55,6 @@ variable "ami_id" {
   description = "Identificador de la AMI"
   type        = string
   default     = "ami-04b4f1a9cf54c11d0"
-}
-
-variable "ami_id_mod" {
-  description = "Identificador de la AMI personalizada con ubuntu"
-  type        = string
-  default     = "ami-04eff093747b0c757"
 }
 
 variable "tipo_instancia" {
