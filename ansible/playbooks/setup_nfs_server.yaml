@@ -1,6 +1,41 @@
 ---
-- name:
-  hosts:
+- name: El NFS server
+  hosts: nfs
   become: yes
 
+  vars_files:
+  - ../vars/vars.yml
+
   tasks:
+    - name: actualizamos los respositorios
+      apt:
+        update_cache: yes
+    
+    - name: Instalamos el servidor NFS
+      apt:
+        name: nfs-kernel-server
+        state: present
+
+    - name: Creamos los directorios 
+      file:
+        path: /var/www/html
+        state: directory
+        owner: nobody
+        group: nogroup
+
+    - name: Importamos el nuestro archivo exports
+      copy:
+        src: ../nfs/exports
+        dest: /etc/exports
+    
+    - name: 
+      replace:
+        path: /etc/exports
+        regexp: FRONTEND_NETWORK
+        replace: "{{ nfs.frontend_network }}"
+    
+    - name:
+      service:
+        name: nfs-kernel-server
+        state: restarted
+        enabled: yes

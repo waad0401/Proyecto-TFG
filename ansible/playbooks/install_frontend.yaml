@@ -4,3 +4,28 @@
   become: yes
 
   tasks:
+    - name : Actulizamos los repositorios
+      apt:
+        update_cache: yes
+
+    - name : Instalamos el apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Habilitar el módulo rewrite de Apache
+      apache2_module:
+        name: rewrite
+        state: present
+
+    - name : Copiamos el el arhcivo 000-default
+      copy:
+        src: ../conf/000-default.conf
+        dest: /etc/apache2/sites-available/
+        mode: 0755
+
+    - name : Reinicamos el apache
+      service:
+        name: apache2
+        state: restarted
+

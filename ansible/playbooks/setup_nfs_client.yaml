@@ -1,6 +1,32 @@
 ---
-- name:
-  hosts:
+- name: Montamos los clientes nfs
+  hosts: frontend
   become: yes
 
+  vars_files:
+  - ../vars/vars.yml
+
   tasks:
+    - name: descargamos los las utilidades nfs
+      apt:
+        name: nfs-common
+        state: present
+
+    - name: Modificamos el archivo fstab
+      lineinfile:
+        path: /etc/fstab
+        insertafter: 'UEFI'
+        line: "{{ nfs.frontend_network }}:/var/www/html /var/www/html  nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
+        state: present
+        
+    - name: Reiniciamos los demonios
+      systemd:
+        daemon_reload: yes
+    
+    - name:
+      mount:
+        path: /var/www/html
+        src: "{{ nfs.server }}:/var/www/html"
+        fstype: nfs
+        opts: defaults
+        state: mounted

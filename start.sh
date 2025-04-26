@@ -69,15 +69,17 @@ apt install ansible -y > /dev/null
 
 # Now we create the infrastrucutre and prepare the ips for ansible
 cd terraform/
+terraform init
 terraform apply -auto-approve
-
 
 # Now we change the ips of the Ansible invetory
 private_ip_nfs=$(terraform output --raw private_ip_nfs)
 private_ip_frnt1=$(terraform output --raw private_ip_frontend-01)
 private_ip_frnt2=$(terraform output --raw private_ip_frontend-02)
 private_ip_back=$(terraform output --raw private_ip_backend)
-instance_id=$(terraform output --raw instance_id_frontend)
+instance_id_01=$(terraform output --raw instance_id_frontend-01)
+instance_id_02=$(terraform output --raw instance_id_frontend-02)
+sg_load_id=$(terraform output --raw sg_loadbalancer_id)
 
 cd ..
 sed -i "s/# CHANGE_MASTER_1/$private_ip_frnt1/" ansible/inventario/inventario
@@ -85,11 +87,14 @@ sed -i "s/# CHANGE_FRONT_1/$private_ip_frnt1/" ansible/inventario/inventario
 sed -i "s/# CHANGE_FRONT_2/$private_ip_frnt2/" ansible/inventario/inventario
 
 sed -i "s/# CHANGE_NFS_1/$private_ip_nfs/" ansible/inventario/inventario
+sed -i "s/# CHANGE_NFS_1/$private_ip_nfs/" ansible/vars/vars.yaml
 sed -i "s/# CHANGE_BACK_1/$private_ip_back/" ansible/inventario/inventario
 
 # Now proceed with the ansible instalation
 ansible-playblook -i ansible/inventario/inventario ansible/main.yaml
 
 # Now we need create the new ami with the frontend content
-aim_id=$(aws ec2 create-image --name "AMI-COSITASLINDAS" --instance-id $instance_id --description "Prueba Creacion de AMI" --output text)
+aim_id=$(aws ec2 create-image --name "AMI-TheTrust" --instance-id $instance_id_01 --description "Prueba Creacion de AMI" --output text)
 
+# Now we procees with the loadbalancer, we need a the vpc so we take the default one
+vpc_id= $(aws ec2 describe-vpcs)

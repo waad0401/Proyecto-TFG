@@ -16,6 +16,14 @@ output "private_ip_backend" {
 }
 
 
-output "instance_id_frontend" {
+output "instance_id_frontend-02" {
   value = aws_instance.frontend-02.id
+}
+
+output "instance_ip_frontend-01" {
+  value = aws_instance.frontend-01.id
+}
+
+output "sg_loadbalancer_id" {
+  value = aws_security_group.loadbalancer.id
 }

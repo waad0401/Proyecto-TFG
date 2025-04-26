@@ -7,7 +7,7 @@ variable "region" {
 variable "Puerto_loadbalancer" {
   description = "Puertos de loadbalancer"
   type        = list(number)
-  default     = [22, 80, 443]
+  default     = [80, 443]
 }
 variable "Puerto_frontend" {
   description = "Puertos de frontend"
@@ -18,13 +18,13 @@ variable "Puerto_frontend" {
 variable "Puerto_backend" {
   description = "Puertos de backend"
   type        = list(number)
-  default     = [22, 80, 443]
+  default     = [22, 3306]
 }
 
 variable "Puerto_nfs" {
   description = "Puertos de nfs"
   type        = list(number)
-  default     = [22, 80, 443]
+  default     = [22, 2049]
 }
 
 variable "sg_frontend" {
@@ -48,7 +48,13 @@ variable "sg_nfs" {
 variable "sg_description" {
   description = "Descripción del grupo de seguridad"
   type        = string
-  default     = "Grupo de seguridad para la instancia de ejemplo 06"
+  default     = "Descripcion del grupo de seguridad"
+}
+
+variable "sg_loadbalancer" {
+  description = "Descripción del grupo de seguridad"
+  type        = string
+  default     = "sg_loadbalancer"
 }
 
 variable "ami_id" {
@@ -69,11 +75,11 @@ variable "key_name" {
   default     = "vockey"
 }
 
-variable "instancia_loadbalancer" {
-  description = "Nombre de la instancia"
-  type        = string
-  default     = "loadbalancer"
-}
+#variable "instancia_loadbalancer" {
+#  description = "Nombre de la instancia"
+#  type        = string
+#  default     = "loadbalancer"
+#}
 variable "instancia_nfs" {
   description = "Nombre de la instancia"
   type        = string
