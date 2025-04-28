@@ -2,6 +2,17 @@ provider "aws" {
   region = var.region
 }
 
+# obtencion de datos que estan por defecto
+data "aws_vpc" "default" { 
+ default = true
+}
+
+data "aws_subnets" "default" {
+ filter {
+   name = "vpc-id"
+   values = [ data.aws_vpc.default.id ]
+ }
+}
 
 # Creacion de los grupos de seguridad
 resource "aws_security_group" "frontend" {
@@ -83,7 +94,37 @@ resource "aws_security_group_rule" "egress" {
   protocol    = "-1"
   cidr_blocks = ["0.0.0.0/0"]
 }
+# Creamos la vpc, las subredes, y el Intetnet Gateway
+#resource "aws_vpc" "vpc" {
+# cidr_block = "172.16.0.0/16"
+# enable_dns_support = true
+# enable_dns_hostnames = true
+#
+# tags = {
+#	Name = "TheVPC"
+# }
+#} 
 
+#resource "aws_subnet" "subred_1" {
+# vpc_id = aws_vpc.vpc.id
+# cidr_block = "172.16.0.0/20"
+# map_public_ip_on_launch = true
+# tags = {
+#	Name = "Subred_1"
+# }
+#}
+
+#resource "aws_subnet" "subred_2" { 
+# vpc_id = aws_vpc.vpc.id
+# cidr_block = "172.16.16.0/20"
+# map_public_ip_on_launch = true
+# tags = {       
+#        Name = "Subred_2"
+# }
+#}
+
+#resource "aws_internet_gateway" "igw" {
+# vpc_id = aws_vpc.vpc.id
 
 # Creamos las instancias
 resource "aws_instance" "backend" {

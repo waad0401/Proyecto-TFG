@@ -1,3 +1,4 @@
+# Datos necesarios para la automatizacion del despliegue
 output "private_ip_nfs" {
   value = aws_instance.nfs.private_ip
 }
@@ -27,3 +28,12 @@ output "instance_ip_frontend-01" {
 output "sg_loadbalancer_id" {
   value = aws_security_group.loadbalancer.id
 }
+
+output "vpc_default_id" {
+  value = data.aws_vpc.default.id
+}
+
+output "default_subnets_id" {   
+  value = data.aws_subnets.default.ids
+}
+
