@@ -80,6 +80,9 @@ private_ip_back=$(terraform output --raw private_ip_backend)
 instance_id_01=$(terraform output --raw instance_id_frontend-01)
 instance_id_02=$(terraform output --raw instance_id_frontend-02)
 sg_load_id=$(terraform output --raw sg_loadbalancer_id)
+vpc_id = $(terraform output --raw vpc_default_id)
+subred_1=$(terraform output --json default_subnets_id | awk -F '"'  '/subnet-/{print $2}')
+subred_2=$(terraform output --json default_subnets_id | awk -F '"'  '/subnet-/{print $4}')
 
 cd ..
 sed -i "s/# CHANGE_MASTER_1/$private_ip_frnt1/" ansible/inventario/inventario
@@ -96,5 +99,4 @@ ansible-playblook -i ansible/inventario/inventario ansible/main.yaml
 # Now we need create the new ami with the frontend content
 aim_id=$(aws ec2 create-image --name "AMI-TheTrust" --instance-id $instance_id_01 --description "Prueba Creacion de AMI" --output text)
 
-# Now we procees with the loadbalancer, we need a the vpc so we take the default one
-vpc_id= $(aws ec2 describe-vpcs)
+# Now we proceed to create a auto-scaling , and loadbalancer
