@@ -4,7 +4,7 @@
   become: yes
 
   vars_files:
-  - ../vars/vars.yml
+  - ../vars/vars.yaml
 
   tasks:
     - name: descargamos los las utilidades nfs
@@ -18,12 +18,12 @@
         insertafter: 'UEFI'
         line: "{{ nfs.frontend_network }}:/var/www/html /var/www/html  nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
         state: present
-        
+
     - name: Reiniciamos los demonios
       systemd:
         daemon_reload: yes
-    
-    - name:
+
+    - name: Montamos el disco
       mount:
         path: /var/www/html
         src: "{{ nfs.server }}:/var/www/html"

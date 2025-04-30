@@ -21,7 +21,7 @@ output "instance_id_frontend-02" {
   value = aws_instance.frontend-02.id
 }
 
-output "instance_ip_frontend-01" {
+output "instance_id_frontend-01" {
   value = aws_instance.frontend-01.id
 }
 

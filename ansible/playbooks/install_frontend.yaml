@@ -1,6 +1,6 @@
 ---
 - name:
-  hosts:
+  hosts: frontend
   become: yes
 
   tasks:

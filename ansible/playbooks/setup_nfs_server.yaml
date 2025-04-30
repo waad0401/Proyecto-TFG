@@ -4,19 +4,19 @@
   become: yes
 
   vars_files:
-  - ../vars/vars.yml
+  - ../vars/vars.yaml
 
   tasks:
     - name: actualizamos los respositorios
       apt:
         update_cache: yes
-    
+
     - name: Instalamos el servidor NFS
       apt:
         name: nfs-kernel-server
         state: present
 
-    - name: Creamos los directorios 
+    - name: Creamos los directorios
       file:
         path: /var/www/html
         state: directory
@@ -27,13 +27,13 @@
       copy:
         src: ../nfs/exports
         dest: /etc/exports
-    
-    - name: 
+
+    - name: Cambiamos por nuestra red
       replace:
         path: /etc/exports
         regexp: FRONTEND_NETWORK
         replace: "{{ nfs.frontend_network }}"
-    
+
     - name:
       service:
         name: nfs-kernel-server
