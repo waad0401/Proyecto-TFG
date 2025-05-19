@@ -69,17 +69,18 @@ variable "tipo_instancia" {
   default     = "t2.small"
 }
 
+variable "tipo_instancia_back" {
+  description = "Tipo de instancia"
+  type        = string
+  default     = "t2.medium"
+}
+
 variable "key_name" {
   description = "Nombre de la clave pública"
   type        = string
   default     = "vockey"
 }
 
-#variable "instancia_loadbalancer" {
-#  description = "Nombre de la instancia"
-#  type        = string
-#  default     = "loadbalancer"
-#}
 variable "instancia_nfs" {
   description = "Nombre de la instancia"
   type        = string

@@ -1,13 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-
 provider "aws" {
   region = var.region
 }
@@ -104,42 +94,11 @@ resource "aws_security_group_rule" "egress" {
   protocol    = "-1"
   cidr_blocks = ["0.0.0.0/0"]
 }
-# Creamos la vpc, las subredes, y el Intetnet Gateway
-#resource "aws_vpc" "vpc" {
-# cidr_block = "172.16.0.0/16"
-# enable_dns_support = true
-# enable_dns_hostnames = true
-#
-# tags = {
-#	Name = "TheVPC"
-# }
-#} 
-
-#resource "aws_subnet" "subred_1" {
-# vpc_id = aws_vpc.vpc.id
-# cidr_block = "172.16.0.0/20"
-# map_public_ip_on_launch = true
-# tags = {
-#	Name = "Subred_1"
-# }
-#}
-
-#resource "aws_subnet" "subred_2" { 
-# vpc_id = aws_vpc.vpc.id
-# cidr_block = "172.16.16.0/20"
-# map_public_ip_on_launch = true
-# tags = {       
-#        Name = "Subred_2"
-# }
-#}
-
-#resource "aws_internet_gateway" "igw" {
-# vpc_id = aws_vpc.vpc.id
 
 # Creamos las instancias
 resource "aws_instance" "backend" {
   ami             = var.ami_id
-  instance_type   = var.tipo_instancia
+  instance_type   = var.tipo_instancia_back
   key_name        = var.key_name
   security_groups = [aws_security_group.backend.name]
 
@@ -180,6 +139,3 @@ resource "aws_instance" "nfs" {
     Name = var.instancia_nfs
   }
 }
-
-#resource "aws_instance" "loadbalancer" {
-#  ami             = var.ami_id
