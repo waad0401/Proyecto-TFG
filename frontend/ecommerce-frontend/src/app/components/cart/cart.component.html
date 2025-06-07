@@ -20,8 +20,7 @@
           <td>{{ it.product.name }}</td>
           <td>{{ it.product.price | currency:'EUR' }}</td>
           <td>
-            <input type="number" class="form-control" [value]="it.quantity" min="1"
-                   (change)="updateQty(it, $event)" />
+            <input type="number" class="form-control" [value]="it.quantity" min="1" (change)="updateQty(it, $event)" />
           </td>
           <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
           <td>
