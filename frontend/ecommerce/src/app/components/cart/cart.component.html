@@ -1,0 +1,43 @@
+<div class="container mt-5">
+  <h2>Carrito</h2>
+  <div *ngIf="items.length === 0">
+    <p>No hay productos en el carrito.</p>
+    <a routerLink="/" class="btn btn-link">Seguir comprando</a>
+  </div>
+  <div *ngIf="items.length">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let it of items">
+          <td>{{ it.product.name }}</td>
+          <td>{{ it.product.price | currency:'EUR' }}</td>
+          <td>
+            <input type="number" class="form-control" [value]="it.quantity" min="1"
+                   (change)="updateQty(it, $event)" />
+          </td>
+          <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="remove(it.product.id)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between align-items-center">
+      <h4>Total: {{ total | currency:'EUR' }}</h4>
+      <div>
+        <button class="btn btn-outline-danger me-2" (click)="clear()">Vaciar carrito</button>
+        <button class="btn btn-primary" (click)="checkout()">Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
