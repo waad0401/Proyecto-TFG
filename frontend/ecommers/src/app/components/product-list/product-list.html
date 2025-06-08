@@ -1,0 +1,26 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Productos</h2>
+  <div *ngIf="loading" class="text-center">Cargando...</div>
+  <div class="row">
+    <div *ngFor="let p of products" class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img [src]="p.imageUrl" class="card-img-top" alt="{{ p.name }}"
+             style="height:200px; object-fit:cover">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ p.name }}</h5>
+          <p class="card-text flex-grow-1">{{ p.description }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-bold">{{ p.price | currency:'EUR' }}</span>
+            <ng-container *ngIf="p.stock > 0; else noStock">
+              <button class="btn btn-primary" (click)="addToCart(p)">Añadir</button>
+            </ng-container>
+            <ng-template #noStock>
+              <span class="badge bg-secondary">Sin stock</span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+</div>

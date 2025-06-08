@@ -1,0 +1,28 @@
+<div class="container mt-5" *ngIf="product; else loadOrError">
+  <div class="row">
+    <div class="col-md-6">
+      <img [src]="product.imageUrl" class="img-fluid" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <p class="fw-bold">{{ product.price | currency:'EUR' }}</p>
+      <div class="mb-3">
+        <label for="qty" class="form-label">Cantidad</label>
+        <input id="qty" type="number" class="form-control"
+               [(ngModel)]="qty" [min]="1" [max]="product.stock"
+               [disabled]="product.stock === 0">
+      </div>
+      <ng-container *ngIf="product.stock > 0; else outOfStock">
+        <button class="btn btn-primary" (click)="addToCart()">Añadir al carrito</button>
+      </ng-container>
+      <ng-template #outOfStock>
+        <button class="btn btn-secondary" disabled>Sin stock</button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<ng-template #loadOrError>
+  <div class="container mt-5" *ngIf="loading">Cargando...</div>
+  <div class="container mt-5 text-danger" *ngIf="error">{{ error }}</div>
+</ng-template>
