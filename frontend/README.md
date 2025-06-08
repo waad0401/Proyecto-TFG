@@ -33,3 +33,16 @@ sudo -E bash nodesource_setup.sh
 sudo apt-get install -y nodejs
 node -v
 Info sacada de aqui: https://github.com/nodesource/distributions/blob/master/README.md
+
+
+Para iniciar el proyecto 
+ng new ecommers \
+  --routing=true \                # Crea AppRoutingModule para gestionar rutas  
+  --style=scss \                  # Usa SCSS en lugar de CSS (mejor modularidad y variables)  
+  --strict=true \                 # Activa el modo estricto de compilación y plantillas  
+  --prefix=ec \                   # Prefijo “ec” para todos los selectores (<ec-*> en lugar de <app-*>)  
+  --inline-style=false \          # Mantén los ficheros .scss externos (no incrustados)  
+  --inline-template=false \       # Mantén los ficheros .html externos  
+  --skip-tests=false \            # Genera ficheros de test (Karma/Jasmine)  
+  --skip-git=false \              # Inicializa un repositorio Git automáticamente  
+  --package-manager=npm   
