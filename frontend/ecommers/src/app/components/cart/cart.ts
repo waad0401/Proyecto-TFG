@@ -1,11 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CartService, CartItem } from '../../services/cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
-  imports: [],
   templateUrl: './cart.html',
-  styleUrl: './cart.css'
+  styleUrls: ['./cart.css']
 })
-export class Cart {
+export class CartComponent implements OnInit {
+  items: CartItem[] = [];
+  total = 0;
 
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.cartService.items$.subscribe(items => {
+      this.items = items;
+      this.total = this.items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    });
+  }
+
+  updateQty(item: CartItem, newQty: number): void {
+    if (newQty > 0) {
+      this.cartService.updateQuantity(item.product.id, newQty);
+    } else {
+      this.cartService.removeItem(item.product.id);
+    }
+  }
+
+  clearCart(): void {
+    this.cartService.clearCart();
+  }
+
+  checkout(): void {
+    this.router.navigate(['/checkout']);
+  }
 }

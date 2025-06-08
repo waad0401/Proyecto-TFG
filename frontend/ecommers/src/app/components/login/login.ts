@@ -1,11 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
-export class Login {
+export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
+  submitted = false;
+  errorMsg = '';
+  returnUrl = '/';
 
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+    if (this.loginForm.invalid) return;
+    const { email, password } = this.loginForm.value;
+    this.auth.login(email, password).subscribe({
+      next: () => this.router.navigateByUrl(this.returnUrl),
+      error: err => this.errorMsg = err.error?.message || 'Error al iniciar sesión'
+    });
+  }
 }

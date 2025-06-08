@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.auth.isAuthenticatedSubject.subscribe(logged => this.isLogged = logged);
+    this.auth.isAuthenticated$().subscribe(logged => this.isLogged = logged);
     this.cartService.items$.subscribe(items =>
       this.cartCount = items.reduce((sum, i) => sum + i.quantity, 0)
     );
@@ -27,6 +27,6 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.auth.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }
