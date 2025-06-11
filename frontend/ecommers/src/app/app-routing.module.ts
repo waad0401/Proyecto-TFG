@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Componentes
-import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductDetailComponent } from './components/product-detail/product-detail.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { CartComponent } from './components/cart/cart.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { ProductListComponent } from './components/product-list/product-list';
+import { ProductDetailComponent } from './components/product-detail/product-detail';
+import { LoginComponent } from './components/login/login';
+import { RegisterComponent } from './components/register/register';
+import { CartComponent } from './components/cart/cart';
+import { CheckoutComponent } from './components/checkout/checkout';
+import { OrderHistoryComponent } from './components/order-history/order-history';
 
 // Guard para proteger rutas
 import { AuthGuard } from './guards/auth.guard';

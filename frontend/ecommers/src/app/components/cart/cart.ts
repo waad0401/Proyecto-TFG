@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService, CartItem } from '../../services/cart.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 export class CartComponent implements OnInit {
   items: CartItem[] = [];
   total = 0;
+  imageBase = environment.imageBaseUrl;
 
   constructor(
     private cartService: CartService,
@@ -37,5 +39,9 @@ export class CartComponent implements OnInit {
 
   checkout(): void {
     this.router.navigate(['/checkout']);
+  }
+
+  imageSrc(p: CartItem): string {
+    return `${this.imageBase}/${p.product.image}`;
   }
 }

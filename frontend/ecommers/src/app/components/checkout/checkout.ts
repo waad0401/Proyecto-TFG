@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CartService, CartItem } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -14,6 +15,7 @@ export class CheckoutComponent implements OnInit {
   loading = false;
   errorMsg = '';
   successMsg = '';
+  imageBase = environment.imageBaseUrl;
 
   constructor(
     private cartService: CartService,
@@ -42,5 +44,9 @@ export class CheckoutComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  imageSrc(p: CartItem): string {
+    return `${this.imageBase}/${p.product.image}`;
   }
 }

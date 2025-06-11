@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';  // Módulo de rutas
 import { AppComponent } from './app.component';
 
 // Interceptor que inyecta el JWT en cada petición
-import { TokenInterceptor } from './interceptors/token.interceptor';
+import { TokenInterceptor } from '../interceptors/token.interceptor';
 // Guard que protege rutas
 import { AuthGuard } from './guards/auth.guard';
 

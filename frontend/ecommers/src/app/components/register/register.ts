@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -9,24 +10,25 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.css']
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
+  registerForm!: FormGroup;
   submitted = false;
   errorMsg = '';
   successMsg = '';
+  imageBase = environment.imageBaseUrl;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-
-  ngOnInit(): void {}
 
   onSubmit(): void {
     this.submitted = true;

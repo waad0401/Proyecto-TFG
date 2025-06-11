@@ -136,3 +136,44 @@ para crear los componentes se ha usado el
 ng generate component components/navbar
 ```
 Los archivos generados , el .spec.ts es el archivos para los test
+
+Dentro del checkout.html
+(click)="placeOrder()"
+
+Es un event binding de Angular:
+
+Las paréntesis () indican que escuchas un evento nativo (aquí click) 
+angular.dev
+
+La expresión placeOrder() invoca el método placeOrder del componente cada vez que el usuario hace click. 
+angular.dev
+
+[disabled]="loading"
+
+Es un property binding de Angular:
+
+Los corchetes [] enlazan la propiedad nativa disabled del elemento con una expresión del componente 
+tutorialspoint.com
+
+Mientras la variable loading sea true (por ejemplo, durante la petición HTTP), el botón estará deshabilitado (<button disabled>) y no podrá ser clicado. Cuando loading pase a false, el botón se activa de nuevo
+
+
+
+## ¿Qué significa `providedIn: 'root'` en Angular?
+
+Cuando en un servicio usas el decorador con `providedIn: 'root'`, le estás indicando a Angular que registre ese servicio en el **inyector raíz** de la aplicación.  
+
+### 1. Registro automático en el inyector global  
+- Al especificar `providedIn: 'root'`, el servicio se registra sin necesidad de añadirlo manualmente en el array `providers` de ningún módulo.  
+- Se crea una **única instancia** compartida por toda la app, garantizando un patrón **singleton**. :contentReference[oaicite:0]{index=0}
+
+### 2. Evita duplicados y facilita la inyección  
+- Cualquier componente, servicio o guard que solicite este servicio recibirá la misma instancia, evitando comportamientos inesperados por instancias múltiples. :contentReference[oaicite:1]{index=1}
+
+### 3. Optimización vía tree shaking  
+- Angular CLI puede eliminar del bundle final aquellos servicios marcados con `providedIn: 'root'` que **no** se usen en ningún sitio, reduciendo el tamaño de la aplicación. :contentReference[oaicite:2]{index=2}
+
+### 4. Alternativas a `'root'`  
+- `providedIn: 'any'`: cada módulo perezosamente cargado recibe su propia instancia, mientras los cargados de forma eager comparten la del inyector raíz.  
+- `providedIn: 'platform'`: registra el servicio en el inyector de plataforma, compartido entre varias apps Angular en una misma página.  
+- `providedIn: MiModulo`: limita la instancia al inyector de un módulo concreto, útil para aislar estados. :contentReference[oaicite:3]{index=3}

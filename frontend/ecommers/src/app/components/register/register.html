@@ -1,38 +1,54 @@
 <div class="container mt-5" style="max-width: 400px;">
   <h2 class="mb-4">Registro</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label for="name" class="form-label">Nombre</label>
-      <input id="name" formControlName="name"
-             class="form-control" [ngClass]="{'is-invalid': submitted && form.get('name')?.invalid}">
-      <div class="invalid-feedback" *ngIf="submitted && form.get('name')?.hasError('required')">
-        Nombre es requerido
+      <input
+        id="name"
+        formControlName="name"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && registerForm.get('name')?.invalid }"
+      />
+      <div class="invalid-feedback" *ngIf="registerForm.get('name')?.hasError('required')">
+        Nombre requerido
       </div>
     </div>
+
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input id="email" formControlName="email"
-             class="form-control" [ngClass]="{'is-invalid': submitted && form.get('email')?.invalid}">
-      <div class="invalid-feedback" *ngIf="submitted && form.get('email')?.hasError('required')">
+      <input
+        id="email"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && registerForm.get('email')?.invalid }"
+      />
+      <div class="invalid-feedback" *ngIf="registerForm.get('email')?.hasError('required')">
         Email requerido
       </div>
-      <div class="invalid-feedback" *ngIf="submitted && form.get('email')?.hasError('email')">
+      <div class="invalid-feedback" *ngIf="registerForm.get('email')?.hasError('email')">
         Email inválido
       </div>
     </div>
+
     <div class="mb-3">
       <label for="password" class="form-label">Contraseña</label>
-      <input id="password" type="password" formControlName="password"
-             class="form-control" [ngClass]="{'is-invalid': submitted && form.get('password')?.invalid}">
-      <div class="invalid-feedback" *ngIf="submitted && form.get('password')?.hasError('required')">
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && registerForm.get('password')?.invalid }"
+      />
+      <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('required')">
         Contraseña requerida
       </div>
-      <div class="invalid-feedback" *ngIf="submitted && form.get('password')?.hasError('minlength')">
+      <div class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('minlength')">
         Mínimo 6 caracteres
       </div>
     </div>
+
     <button class="btn btn-primary w-100">Registrar</button>
-    <div class="text-success mt-3" *ngIf="success">{{ success }}</div>
-    <div class="text-danger mt-2" *ngIf="error">{{ error }}</div>
+    <div class="text-success mt-3" *ngIf="successMsg">{{ successMsg }}</div>
+    <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
   </form>
 </div>

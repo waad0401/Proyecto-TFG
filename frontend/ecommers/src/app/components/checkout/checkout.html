@@ -7,11 +7,24 @@
   <div *ngIf="items.length">
     <table class="table mb-3">
       <thead>
-        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+        </tr>
       </thead>
       <tbody>
         <tr *ngFor="let it of items">
-          <td>{{ it.product.name }}</td>
+          <td>
+            <img
+              [src]="imageSrc(it)"
+              alt="{{ it.product.name }}"
+              width="50"
+              class="me-2"
+            />
+            {{ it.product.name }}
+          </td>
           <td>{{ it.product.price | currency:'EUR' }}</td>
           <td>{{ it.quantity }}</td>
           <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
@@ -22,7 +35,7 @@
     <button class="btn btn-success" (click)="placeOrder()" [disabled]="loading">
       {{ loading ? 'Procesando...' : 'Confirmar Pedido' }}
     </button>
-    <div class="text-success mt-3" *ngIf="success">{{ success }}</div>
-    <div class="text-danger mt-2" *ngIf="error">{{ error }}</div>
+    <div class="text-success mt-3" *ngIf="successMsg">{{ successMsg }}</div>
+    <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
   </div>
 </div>
