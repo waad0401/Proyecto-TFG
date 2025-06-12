@@ -1,8 +1,6 @@
 -- 1) Crea la base de datos si no existe
-CREATE DATABASE IF NOT EXISTS `ecomm` 
-  DEFAULT CHARACTER SET utf8mb4 
-  COLLATE utf8mb4_unicode_ci;
-USE `ecomm`;
+CREATE DATABASE IF NOT EXISTS `ecommers` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `ecommers`;
 
 -- 2) Tabla de usuarios
 CREATE TABLE IF NOT EXISTS `users` (
