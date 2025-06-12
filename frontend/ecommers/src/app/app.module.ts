@@ -1,37 +1,43 @@
-import { BrowserModule } from '@angular/platform-browser';
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';  // Módulo de rutas
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-// Interceptor que inyecta el JWT en cada petición
-import { TokenInterceptor } from '../interceptors/token.interceptor';
-// Guard que protege rutas
-import { AuthGuard } from './guards/auth.guard';
+import { NavbarComponent }       from './components/navbar/navbar';
+import { ProductListComponent }  from './components/product-list/product-list';
+import { ProductDetailComponent } from './components/product-detail/product-detail';
+import { CartComponent }         from './components/cart/cart';
+import { CheckoutComponent }     from './components/checkout/checkout';
+import { LoginComponent }        from './components/login/login';
+import { RegisterComponent }     from './components/register/register';
+import { OrderHistoryComponent } from './components/order-history/order-history';
 
 @NgModule({
   declarations: [
     AppComponent,
-    // <-- Aquí irán tus componentes:
-    // NavbarComponent,
-    // ProductListComponent,
-    // LoginComponent, etc.
+    NavbarComponent,
+    ProductListComponent,
+    ProductDetailComponent,
+    CartComponent,
+    CheckoutComponent,
+    LoginComponent,
+    RegisterComponent,
+    OrderHistoryComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,     // Para consumir la API
-    AppRoutingModule     // Para navegación entre vistas
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AppRoutingModule
   ],
-  providers: [
-    // Registramos el interceptor de token
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
-    // Registramos el AuthGuard (si lo usas)
-    AuthGuard
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

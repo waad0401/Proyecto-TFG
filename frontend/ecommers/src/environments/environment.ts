@@ -1,8 +1,9 @@
-// Variables de entorno para desarrollo
 export const environment = {
   production: false,
-  // URL base de tu API
+
+  // URL base de la API en desarrollo
   apiUrl: 'http://localhost:3000/api',
-  // Clave donde guardaremos el JWT en localStorage
-  jwtTokenKey: 'E_COMM_TOKEN'
+
+  // Ruta base para las imágenes servidas desde NFS
+  imageBaseUrl: 'http://localhost:3000/images'
 };

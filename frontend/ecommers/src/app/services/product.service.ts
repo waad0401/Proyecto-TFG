@@ -6,6 +6,7 @@ import { Product } from '../models/product';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProductService {
   private base = `${environment.apiUrl}/products`;
 

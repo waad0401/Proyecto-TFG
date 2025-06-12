@@ -1,5 +1,9 @@
+// src/app/product-list/product-list.ts
+
 import { Component, OnInit } from '@angular/core';
-import { ProductService, Product } from '../../services/product.service';
+import { finalize } from 'rxjs/operators';
+import { ProductService } from '../../services/product.service';
+import { Product } from '../../models/product';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
 
@@ -12,7 +16,9 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   loading = true;
   errorMsg = '';
-  imageBase = environment.imageBaseUrl;
+
+  // Base URL de imágenes (desde environment)
+  private readonly imageBase = environment.imageBaseUrl;
 
   constructor(
     private productService: ProductService,
@@ -20,14 +26,15 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productService.getAll().subscribe({
+    this.productService.getAll().pipe(
+      // Asegura que 'loading' se desactive tanto en éxito como en error
+      finalize(() => this.loading = false)
+    ).subscribe({
       next: data => {
         this.products = data;
-        this.loading = false;
       },
       error: () => {
         this.errorMsg = 'No se pudieron cargar los productos';
-        this.loading = false;
       }
     });
   }
@@ -36,7 +43,7 @@ export class ProductListComponent implements OnInit {
     this.cartService.addItem(product);
   }
 
-  // Método para componer la URL de la imagen
+  // Crear la ruta de donde estaran las imagenes
   imageSrc(p: Product): string {
     return `${this.imageBase}/${p.image}`;
   }

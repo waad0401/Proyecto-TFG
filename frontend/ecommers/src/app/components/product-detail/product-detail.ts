@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductService, Product } from '../../services/product.service';
+import { finalize } from 'rxjs/operators';
+import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../environments/environment';
+import { Product } from '../../models/product';
+
 
 @Component({
   selector: 'app-product-detail',
@@ -14,7 +17,9 @@ export class ProductDetailComponent implements OnInit {
   loading = true;
   errorMsg = '';
   quantity = 1;
-  imageBase = environment.imageBaseUrl;
+
+  // Base URL de imágenes (desde environment)
+  private readonly imageBase = environment.imageBaseUrl;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,9 +29,12 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.productService.getById(id).subscribe({
-      next: p => { this.product = p; this.loading = false; },
-      error: () => { this.errorMsg = 'Producto no encontrado'; this.loading = false; }
+    this.productService.getById(id).pipe(
+      // Desactiva loading al completar (éxito o error)
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: p => { this.product = p; },
+      error: () => { this.errorMsg = 'Producto no encontrado'; }
     });
   }
 
@@ -36,7 +44,12 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * Devuelve la URL completa de la imagen del producto.
+   */
   imageSrc(): string {
-    return this.product ? `${this.imageBase}/${this.product.image}` : '';
+    return this.product
+      ? `${this.imageBase}/${this.product.image}`
+      : '';
   }
 }
