@@ -1,22 +1,26 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { CartItem } from '../models/cart-item';
-import { Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private base = `${environment.apiUrl}/orders`;
+  private api = `${environment.apiUrl}/orders`;
 
   constructor(private http: HttpClient) {}
 
-  placeOrder(items: CartItem[]) {
-    return this.http.post<Order>(this.base, { items });
+  /**
+   * Crea un nuevo pedido. Envía items y total.
+   */
+  create(order: { items: any[]; total: number }) {
+    return this.http.post(this.api, order);
   }
 
-  getUserOrders() {
-    return this.http.get<Order[]>(`${this.base}/my`);
+  /**
+   * Obtiene el historial de pedidos.
+   */
+  list() {
+    return this.http.get(this.api);
   }
 }
