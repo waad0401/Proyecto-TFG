@@ -1,5 +1,3 @@
-// src/app/product-list/product-list.ts
-
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
@@ -12,6 +10,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css']
 })
+
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   loading = true;

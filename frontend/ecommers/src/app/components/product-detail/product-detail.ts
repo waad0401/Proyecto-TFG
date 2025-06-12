@@ -12,6 +12,7 @@ import { Product } from '../../models/product';
   templateUrl: './product-detail.html',
   styleUrls: ['./product-detail.css']
 })
+
 export class ProductDetailComponent implements OnInit {
   product: Product | null = null;
   loading = true;

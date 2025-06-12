@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })
+
 export class CartComponent implements OnInit {
   items: CartItem[] = [];
   total = 0;

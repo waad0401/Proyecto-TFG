@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css']
 })
+
 export class CheckoutComponent implements OnInit {
   items: CartItem[] = [];
   total = 0;
@@ -32,18 +33,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   placeOrder(): void {
-    if (!this.items.length) return;
-    this.loading = true;
-    this.orderService.placeOrder(this.items).subscribe({
-      next: () => {
-        this.successMsg = 'Pedido realizado con éxito';
-        this.cartService.clearCart();
-        setTimeout(() => this.router.navigate(['/orders']), 2000);
-      },
-      error: () => {
-        this.errorMsg = 'Error al procesar el pedido';
-        this.loading = false;
-      }
+    this.orderService.placeOrder({
+      items: this.items,
+      total: this.total
+    }).subscribe({
+      next: () => this.successMsg = 'Pedido realizado con éxito',
+      error: () => this.errorMsg = 'Error al procesar el pedido'
     });
   }
 

@@ -11,4 +11,4 @@ if (environment.production) {
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
-  .catch(err => console.error('Error bootstrapping Angular application:', err));
+  .catch((err : any)=> console.error('Error bootstrapping Angular application:', err));

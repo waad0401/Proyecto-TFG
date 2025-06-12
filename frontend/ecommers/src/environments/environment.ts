@@ -5,5 +5,7 @@ export const environment = {
   apiUrl: 'http://localhost:3000/api',
 
   // Ruta base para las imágenes servidas desde NFS
-  imageBaseUrl: 'http://localhost:3000/images'
+  imageBaseUrl: 'http://localhost:3000/images',
+  
+  jwtTokenKey: 'auth_token'
 };

@@ -18,7 +18,7 @@ export class OrderHistoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.orderService.getUserOrders().subscribe({
-      next: data => {
+      next: (data: Order[]) => {
         this.orders = data;
         this.loading = false;
       },
