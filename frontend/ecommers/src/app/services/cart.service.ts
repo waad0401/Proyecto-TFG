@@ -10,7 +10,10 @@ export class CartService {
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   items$ = this.itemsSubject.asObservable();
 
-  addItem(product: Product, quantity: number = 1) {
+  /**
+   * Añade un producto al carrito o suma cantidad si ya existe.
+   */
+  addItem(product: Product, quantity: number = 1): void {
     const items = [...this.itemsSubject.value];
     const idx = items.findIndex(i => i.product.id === product.id);
     if (idx > -1) {
@@ -21,19 +24,31 @@ export class CartService {
     this.itemsSubject.next(items);
   }
 
-  updateQuantity(productId: string, quantity: number) {
+  /**
+   * Actualiza la cantidad de un producto en el carrito.
+   * Usa string para productId, igual que Product.id.
+   */
+  updateQuantity(productId: string, quantity: number): void {
     const items = this.itemsSubject.value.map(i =>
-      i.product.id === productId ? { ...i, quantity } : i
+      i.product.id === productId
+        ? { ...i, quantity }
+        : i
     );
     this.itemsSubject.next(items);
   }
 
-  removeItem(productId: string) {
+  /**
+   * Elimina un producto del carrito por su ID (string).
+   */
+  removeItem(productId: string): void {
     const items = this.itemsSubject.value.filter(i => i.product.id !== productId);
     this.itemsSubject.next(items);
   }
 
-  clearCart() {
+  /**
+   * Vacía completamente el carrito.
+   */
+  clearCart(): void {
     this.itemsSubject.next([]);
   }
 }
