@@ -13,7 +13,7 @@ variable "Puerto_loadbalancer" {
 variable "Puerto_middleware" {
   description = "Puertos de middleware"
   type        = list(number)
-  default     = [80, 3306,3000]
+  default     = [ 22 ,80, 3306,3000]
 }
 
 variable "Puerto_frontend" {

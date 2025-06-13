@@ -1,6 +1,6 @@
 ---
 - name:
-  hosts:
+  hosts: backend
   become: yes
   vars:
     src_dir:  "../../backend"   # carpeta LOCAL con lanzar.sh

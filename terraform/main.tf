@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "ingress_loadbalancer" {
 }
 
 resource "aws_security_group_rule" "ingress_middleware" {
-  security_group_id = aws_security_group.loadbalancer.id
+  security_group_id = aws_security_group.middleware.id
   type              = "ingress"
 
   count       = length(var.Puerto_middleware)
@@ -86,6 +86,7 @@ resource "aws_security_group_rule" "ingress_middleware" {
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
+
 resource "aws_security_group_rule" "ingress_nfs" {
   security_group_id = aws_security_group.nfs.id
   type              = "ingress"
@@ -135,9 +136,10 @@ resource "aws_instance" "middleware" {
   security_groups = [aws_security_group.middleware.name]
 
   tags = {
-    Name = var.instancia_backend
+    Name = "middleware"
   }
 }
+
 resource "aws_instance" "frontend-02" {
   ami             = var.ami_id
   instance_type   = var.tipo_instancia

@@ -70,7 +70,7 @@ elif [[ $respuesta == 'y' ]]; then
 
 	# ###################################################
 
-	# cd terraform/
+	cd terraform/
 	# terraform init
 	# terraform apply -auto-approve
 	# Now we change the ips of the Ansible invetory

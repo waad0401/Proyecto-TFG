@@ -1,6 +1,6 @@
 ---
 - name: Desplegar middleware Node.js y dejarlo corriendo como servicio
-  hosts: web
+  hosts: middleware
   become: yes
 
   vars:
