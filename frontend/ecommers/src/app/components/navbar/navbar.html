@@ -1,11 +1,1 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/">E-Commers</a>
-  <ul class="navbar-nav ms-auto">
-    <li class="nav-item" *ngIf="!isLogged"><a class="nav-link" routerLink="/login">Login</a></li>
-    <li class="nav-item" *ngIf="!isLogged"><a class="nav-link" routerLink="/register">Register</a></li>
-    <li class="nav-item" *ngIf="isLogged"><a class="nav-link" (click)="logout()">Logout</a></li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/cart">Cart ({{ cartCount }})</a>
-    </li>
-  </ul>
-</nav>
+<p>navbar works!</p>

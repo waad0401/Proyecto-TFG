@@ -1,0 +1,20 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label>Nombre</label>
+    <input class="form-control" formControlName="name"
+           [ngClass]="{'is-invalid': registerForm.get('name')?.invalid && registerForm.touched}">
+  </div>
+  <div class="mb-3">
+    <label>Email</label>
+    <input class="form-control" formControlName="email"
+           [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.touched}">
+  </div>
+  <div class="mb-3">
+    <label>Contraseña</label>
+    <input type="password" class="form-control" formControlName="password"
+           [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.touched}">
+  </div>
+  <button class="btn btn-primary" type="submit">Registrar</button>
+  <div *ngIf="success" class="alert alert-success mt-2">{{ success }}</div>
+  <div *ngIf="error"   class="alert alert-danger mt-2">{{ error }}</div>
+</form>

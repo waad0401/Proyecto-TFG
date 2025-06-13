@@ -1,0 +1,16 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label>Email</label>
+    <input type="email" class="form-control"
+           formControlName="email"
+           [ngClass]="{'is-invalid': error}">
+  </div>
+  <div class="mb-3">
+    <label>Contraseña</label>
+    <input type="password" class="form-control"
+           formControlName="password"
+           [ngClass]="{'is-invalid': error}">
+  </div>
+  <button class="btn btn-primary" type="submit">Entrar</button>
+  <div *ngIf="error" class="alert alert-danger mt-2">{{ error }}</div>
+</form>

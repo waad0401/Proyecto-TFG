@@ -1,0 +1,19 @@
+<div *ngIf="loading" class="text-center">Cargando pedidos…</div>
+<div *ngIf="!loading && !orders.length" class="alert alert-info">
+  No tienes pedidos.
+</div>
+<div *ngFor="let o of orders" class="card mb-3" *ngIf="orders.length">
+  <div class="card-header">
+    Pedido #{{ o.id }} — {{ o.date | date:'short' }} — {{ o.status }}
+  </div>
+  <ul class="list-group list-group-flush">
+    <li *ngFor="let it of o.items" class="list-group-item d-flex justify-content-between">
+      {{ it.product.name }} (x{{ it.quantity }})
+      <span>{{ (it.product.price * it.quantity) | currency:'EUR' }}</span>
+    </li>
+  </ul>
+  <div class="card-footer text-end">
+    Total: {{ o.total | currency:'EUR' }}
+  </div>
+</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
