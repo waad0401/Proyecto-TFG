@@ -4,11 +4,18 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "Puerto_loadbalancer" {
+  description = "Puertos de loadbalancer"
+  type        = list(number)
+  default     = [80, 443]
+}
+
 variable "Puerto_middleware" {
   description = "Puertos de middleware"
   type        = list(number)
-  default     = [80, 3306, 3000]
+  default     = [80, 3306,3000]
 }
+
 variable "Puerto_frontend" {
   description = "Puertos de frontend"
   type        = list(number)
@@ -49,6 +56,12 @@ variable "sg_description" {
   description = "Descripción del grupo de seguridad"
   type        = string
   default     = "Descripcion del grupo de seguridad"
+}
+
+variable "sg_loadbalancer" {
+  description = "Descripción del grupo de seguridad"
+  type        = string
+  default     = "sg_loadbalancer"
 }
 
 variable "sg_middleware" {

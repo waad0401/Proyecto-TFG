@@ -7,6 +7,9 @@ output "private_ip_frontend-02" {
   value = aws_instance.frontend-02.private_ip
 }
 
+output "private_ip_middleware" {
+  value = aws_instance.middleware.private_ip
+}
 
 output "private_ip_frontend-01" {
   value = aws_instance.frontend-01.private_ip
@@ -25,9 +28,10 @@ output "instance_id_frontend-01" {
   value = aws_instance.frontend-01.id
 }
 
-output "sg_middleware_id" {
-  value = aws_security_group.middleware.id
+output "sg_loadbalancer_id" {
+  value = aws_security_group.loadbalancer.id
 }
+
 
 output "vpc_default_id" {
   value = data.aws_vpc.default.id

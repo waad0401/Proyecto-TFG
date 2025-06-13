@@ -19,10 +19,16 @@ resource "aws_security_group" "frontend" {
   name        = var.sg_frontend
   description = var.sg_description
 }
+resource "aws_security_group" "loadbalancer" {
+  name        = var.sg_loadbalancer
+  description = var.sg_description
+}
+
 resource "aws_security_group" "middleware" {
   name        = var.sg_middleware
   description = var.sg_description
 }
+
 resource "aws_security_group" "nfs" {
   name        = var.sg_nfs
   description = var.sg_description
@@ -55,8 +61,19 @@ resource "aws_security_group_rule" "ingress_backend" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "ingress_loadbalancer" {
+  security_group_id = aws_security_group.loadbalancer.id
+  type              = "ingress"
+
+  count       = length(var.Puerto_loadbalancer)
+  from_port   = var.Puerto_loadbalancer[count.index]
+  to_port     = var.Puerto_loadbalancer[count.index]
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "ingress_middleware" {
-  security_group_id = aws_security_group.middleware.id
+  security_group_id = aws_security_group.loadbalancer.id
   type              = "ingress"
 
   count       = length(var.Puerto_middleware)
@@ -65,7 +82,6 @@ resource "aws_security_group_rule" "ingress_middleware" {
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
-
 resource "aws_security_group_rule" "ingress_nfs" {
   security_group_id = aws_security_group.nfs.id
   type              = "ingress"
@@ -81,10 +97,11 @@ resource "aws_security_group_rule" "ingress_nfs" {
 
 resource "aws_security_group_rule" "egress" {
   for_each = { 
-    middleware = aws_security_group.middleware.id,
+    loadbalancer = aws_security_group.loadbalancer.id,
     nfs = aws_security_group.nfs.id,
     frontend = aws_security_group.frontend.id,
     backend = aws_security_group.backend.id
+    middleware = aws_security_group.middleware.id
   }
 
   security_group_id = each.value
@@ -107,6 +124,16 @@ resource "aws_instance" "backend" {
   }
 }
 
+resource "aws_instance" "middleware" {
+  ami             = var.ami_id
+  instance_type   = var.tipo_instancia_back
+  key_name        = var.key_name
+  security_groups = [aws_security_group.middleware.name]
+
+  tags = {
+    Name = var.instancia_backend
+  }
+}
 resource "aws_instance" "frontend-02" {
   ami             = var.ami_id
   instance_type   = var.tipo_instancia

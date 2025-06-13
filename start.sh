@@ -86,6 +86,7 @@ private_ip_nfs=$(terraform output --raw private_ip_nfs)
 private_ip_frnt2=$(terraform output --raw private_ip_frontend-02)
 private_ip_frnt1=$(terraform output --raw private_ip_frontend-01)
 private_ip_back=$(terraform output --raw private_ip_backend)
+private_ip_middle=$(terraform output --raw private_ip_middleware)
 instance_id_01=$(terraform output --raw instance_id_frontend-01)
 instance_id_02=$(terraform output --raw instance_id_frontend-02)
 sg_load_id=$(terraform output --raw sg_loadbalancer_id)
@@ -97,10 +98,13 @@ cd ..
 sed -i "s/# CHANGE_MASTER_1/$private_ip_frnt1/" ansible/inventario/inventario
 sed -i "s/# CHANGE_FRONT_1/$private_ip_frnt1/" ansible/inventario/inventario
 sed -i "s/# CHANGE_FRONT_2/$private_ip_frnt2/" ansible/inventario/inventario
+sed -i "s/# CHANGE_MIDDLE/$private_ip_middle/" ansible/inventario/inventario
+sed -i "s/# CHANGE_MIDDLE/$private_ip_middle/" ansible/vars/vars.yaml
 
 sed -i "s/# CHANGE_NFS_1/$private_ip_nfs/" ansible/inventario/inventario
 sed -i "s/# CHANGE_NFS_1/$private_ip_nfs/" ansible/vars/vars.yaml
-sed -i "s/# CHANGE_BACK_1/$private_ip_back/" ansible/inventario/inventario
+sed -i "s/# CHANGE_BACK/$private_ip_back/" ansible/inventario/inventario
+sed -i "s/# CHANGE_BACK/$private_ip_back/" ansible/vars/vars.yaml
 
 # # Now proceed with the ansible instalation
 ansible-playbook -i ansible/inventario/inventario ansible/main.yaml

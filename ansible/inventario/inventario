@@ -1,18 +1,18 @@
 [frontend_master]
-172.31.24.135
+# CHANGE_MASTER_1
 
 [frontend]
-172.31.24.135
-172.31.18.59
+# CHANGE_FRONT_1
+# CHANGE_FRONT_2
 
 [backend]
-172.31.27.43
+# CHANGE_BACK
 
 [middleware]
-
+# CHANGE_MIDDLE
 
 [nfs]
-172.31.28.63
+# CHANGE_NFS_1
 
 [all:vars]
 ansible_user=ubuntu

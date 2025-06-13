@@ -4,16 +4,15 @@
   become: yes
 
   vars:
-    # ---------- EDITA SOLO ESTAS VARIABLES -----------------
     src_dir:      "../../middleware"     # proyecto local
     dest_dir:     "/opt/middleware"      # destino en el servidor
     service_name: "middleware"           # systemd unit
-    ip_back:      "192.168.1.50"         # reemplaza CHANGEME en src/.env
     app_entry:    "index.js"             # archivo principal
     nvm_version:  "v0.40.2"
     node_major:   "22"                   # Node v22.x
     service_user: "{{ ansible_user }}"   # usuario SSH actual
-    # -------------------------------------------------------
+  vars_files:
+  - ../vars/vars.yaml
 
   tasks:
   # 1 ▸ Copiar el código al host
@@ -28,6 +27,13 @@
   - name: Reemplazar CHANGEME en .env
     replace:
       path: "{{ dest_dir }}/src/.env"
+      regexp: 'CHANGEME'
+      replace: "{{ ip_back }}"
+      backup: yes
+
+  - name: Reemplazar CHANGEME en .env
+    replace:
+      path: "{{ dest_dir }}/.env"
       regexp: 'CHANGEME'
       replace: "{{ ip_back }}"
       backup: yes
