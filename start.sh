@@ -30,9 +30,10 @@ echo "Ahora introduce las credenciales de aws"
 aws configure
 
 
-echo "Ahora vaya a '~/.aws/credentials', modifique ese archivo y ponga sus credencias del aws, se espera confimacion "
-while [[ $confirmacion != 'yes' ]]; do
-        read -p "Introduzaca 'yes' cuando lo haya realizado :" confirmacion
+
+while [[ $confirmacion != 'Y' ]]; do
+	echo "Ahora vaya a '~/.aws/credentials', modifique ese archivo y ponga sus credencias del aws, se espera confimacion "
+	read -p "Introduzaca 'Y' cuando lo haya realizado :" confirmacion
 done
 
 
@@ -112,18 +113,10 @@ ansible-playbook -i ansible/inventario/inventario ansible/main.yaml
 # Now we need create the new ami with the frontend content
 ami_id=$(aws ec2 create-image --name "AMI-RealOne" --instance-id $instance_id_01 --description "Prueba Creacion de AMI" --output text)
 
+ansible-playbook -i ansible/inventario/inventario ansible/mainp2.yaml
 # En los siguientes pasos crearemos un Aplication Loadbalancer, un grupo de destino y un listener para que redija el trafico
 load_id=$(aws elbv2 create-load-balancer --name Loadbalancer --subnets $subred_1 $subred_2 --security-groups $sg_load_id \
 	--scheme internet-facing --type application --ip-address-type ipv4 --output text  | awk -F ' ' '/arn:/{print $6}')
-
-target_gp_id=$(aws elbv2 create-target-group --name grupo-destino  --protocol HTTP --port 80 \
-	--vpc-id $vpc_id --target-type instance --output text | awk -F ' ' '/arn:/{print $13}' )
-certificate_id=$(aws acm request-certificate --domain-name www.paginapruebatfg.com --validation-method DNS \
-	--options CertificateTransparencyLoggingPreference=ENABLED --output text | awk '{ print $1 }')
-
-aws elbv2 create-listener --load-balancer-arn $load_id --protocol HTTPS -port 443 --certificates CertificateArn=$certificate_id \
-  --default-actions Type=forward,TargetGroupArn=$target_gp_id
-
 
 # Now we proceed to create a launch-template and the auto-scaling-group
 
@@ -139,4 +132,53 @@ aws autoscaling create-auto-scaling-group --auto-scaling-group-name Grupo-AutoSc
 
 auto_gp_id=$(aws autoscaling describe-auto-scaling-groups --output text | awk -F ' ' '/arn:/{print $2}')
 
-echo "Debe registrar este nombre de domininio antes de continuar"
+while [[ $confirmacion != 'Y' ]]; do
+	echo "Debe registrar este nombre de domininio antes de continuar"
+	read -p "Introduzaca 'Y' cuando lo haya realizado :" confirmacion
+done
+sudo apt install certbot -y 
+read -p "Introduzca el nombre de dominio que ha registrado" DOMINIO
+REGION="eu-west-1"                 # ← MODIFICABLE: región de AWS
+
+# Ruta donde se guardará temporalmente el certificado
+DIRECTORIO_CERT="/etc/letsencrypt/live/$DOMINIO"
+
+# ===== FUNCIÓN: Solicitar certificado con Certbot (modo manual DNS) =====
+echo "▶ Solicitando certificado SSL para $DOMINIO con Certbot..."
+certbot certonly --manual --preferred-challenges dns -d "$DOMINIO"
+
+if [ $? -ne 0 ]; then
+  echo "❌ Error durante la generación del certificado."
+  exit 1
+fi
+
+echo "Certificado generado correctamente."
+echo "Ruta del certificado: $DIRECTORIO_CERT"
+
+# ===== FUNCIÓN: Subir el certificado a ACM =====
+echo "▶ Subiendo certificado a AWS ACM..."
+
+certificate_id=$(aws acm import-certificate \
+  --certificate "fileb://$DIRECTORIO_CERT/cert.pem" \
+  --private-key "fileb://$DIRECTORIO_CERT/privkey.pem" \
+  --certificate-chain "fileb://$DIRECTORIO_CERT/fullchain.pem" \
+  --region "$REGION" \
+  --query CertificateArn --output text)
+
+if [ -z "$certificate_id" ]; then
+  echo " Fallo en la subida del certificado a ACM."
+  exit 1
+fi
+
+target_gp_id=$(aws elbv2 create-target-group --name grupo-destino  --protocol HTTP --port 80 \
+	--vpc-id $vpc_id --target-type instance --output text | awk -F ' ' '/arn:/{print $13}' )
+
+aws elbv2 create-listener \
+  --load-balancer-arn $load_id \
+  --protocol HTTP \
+  --port 80 \
+  --default-actions Type=redirect,RedirectConfig='{"Protocol":"HTTPS","Port":"443","StatusCode":"HTTP_301"}'
+
+
+aws elbv2 create-listener --load-balancer-arn $load_id --protocol HTTPS -port 443 --certificates CertificateArn=$certificate_id \
+  --default-actions Type=forward,TargetGroupArn=$target_gp_id
