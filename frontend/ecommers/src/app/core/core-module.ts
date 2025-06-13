@@ -1,12 +1,18 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-
+// src/app/core/core.module.ts
+import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { HttpClientModule }             from '@angular/common/http';
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ]
+  imports:      [ HttpClientModule ],
+  exports:      [ HttpClientModule ],
+  providers:    []   // Los servicios con providedIn:'root' no van aquí
 })
-export class CoreModule { }
+export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error(
+        'CoreModule ya está cargado. Importa CoreModule solo en AppModule.'
+      );
+    }
+  }
+}

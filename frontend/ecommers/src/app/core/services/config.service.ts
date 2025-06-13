@@ -1,3 +1,4 @@
+// src/app/core/services/config.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -15,30 +16,20 @@ export class ConfigService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Carga el config.json y guarda su contenido en this.config.
-   * Devuelve Promise<void> correctamente.
-   */
+  /** Debe llamarse en APP_INITIALIZER */
   load(): Promise<void> {
     return firstValueFrom(
       this.http.get<AppConfig>('/assets/config.json')
-    ).then(cfg => {
-      this.config = cfg;
-      // no devolvemos nada (void)
-    });
+    ).then(cfg => this.config = cfg);
   }
 
   get apiUrl(): string {
-    if (!this.config) {
-      throw new Error('ConfigService: config no ha sido cargado aún.');
-    }
+    if (!this.config) throw new Error('Config no cargado');
     return this.config.apiUrl;
   }
 
   get imageBase(): string {
-    if (!this.config) {
-      throw new Error('ConfigService: config no ha sido cargado aún.');
-    }
+    if (!this.config) throw new Error('Config no cargado');
     return this.config.imageBase;
   }
 }
