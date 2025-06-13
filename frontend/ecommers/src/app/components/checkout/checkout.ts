@@ -1,48 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../services/cart.service';
-import { CartItem } from '../../models/cart-item';
-import { OrderService } from '../../services/order.service';
-import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { CommonModule }      from '@angular/common';
+import { CartService }       from '../../services/cart.service';
+import { OrderService }      from '../../services/order.service';
+import { RouterLink }        from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-checkout',
   templateUrl: './checkout.html',
-  styleUrls: ['./checkout.css']
+  styleUrls: ['./checkout.css'],
+  imports: [CommonModule, RouterLink]
 })
-
 export class CheckoutComponent implements OnInit {
-  items: CartItem[] = [];
+  items: any[] = [];
   total = 0;
-  loading = false;
-  errorMsg = '';
-  successMsg = '';
-  imageBase = environment.imageBaseUrl;
+  success = '';
+  error = '';
 
   constructor(
-    private cartService: CartService,
-    private orderService: OrderService,
-    private router: Router
+    private cs: CartService,
+    private os: OrderService
   ) {}
 
   ngOnInit(): void {
-    this.cartService.items$.subscribe(items => {
-      this.items = items;
-      this.total = this.items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    this.cs.items$.subscribe(it => {
+      this.items = it;
+      this.total = it.reduce((s, i) => s + i.product.price * i.quantity, 0);
     });
   }
 
-  placeOrder(): void {
-    this.orderService.placeOrder({
-      items: this.items,
-      total: this.total
-    }).subscribe({
-      next: () => this.successMsg = 'Pedido realizado con éxito',
-      error: () => this.errorMsg = 'Error al procesar el pedido'
+  placeOrder() {
+    this.os.placeOrder(this.items).subscribe({
+      next: o => { this.success = 'Pedido realizado!'; this.cs.clearCart(); },
+      error: () => { this.error = 'Error al procesar el pedido'; }
     });
-  }
-
-  imageSrc(p: CartItem): string {
-    return `${this.imageBase}/${p.product.image}`;
   }
 }

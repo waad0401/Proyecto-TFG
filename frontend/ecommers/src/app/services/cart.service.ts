@@ -3,17 +3,12 @@ import { BehaviorSubject } from 'rxjs';
 import { CartItem } from '../models/cart-item';
 import { Product } from '../models/product';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CartService {
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   items$ = this.itemsSubject.asObservable();
 
-  /**
-   * Añade un producto al carrito o suma cantidad si ya existe.
-   */
-  addItem(product: Product, quantity: number = 1): void {
+  addItem(product: Product, quantity = 1) {
     const items = [...this.itemsSubject.value];
     const idx = items.findIndex(i => i.product.id === product.id);
     if (idx > -1) {
@@ -24,31 +19,19 @@ export class CartService {
     this.itemsSubject.next(items);
   }
 
-  /**
-   * Actualiza la cantidad de un producto en el carrito.
-   * Usa string para productId, igual que Product.id.
-   */
-  updateQuantity(productId: string, quantity: number): void {
+  updateQuantity(productId: string, quantity: number) {
     const items = this.itemsSubject.value.map(i =>
-      i.product.id === productId
-        ? { ...i, quantity }
-        : i
+      i.product.id === productId ? { ...i, quantity } : i
     );
     this.itemsSubject.next(items);
   }
 
-  /**
-   * Elimina un producto del carrito por su ID (string).
-   */
-  removeItem(productId: string): void {
+  removeItem(productId: string) {
     const items = this.itemsSubject.value.filter(i => i.product.id !== productId);
     this.itemsSubject.next(items);
   }
 
-  /**
-   * Vacía completamente el carrito.
-   */
-  clearCart(): void {
+  clearCart() {
     this.itemsSubject.next([]);
   }
 }

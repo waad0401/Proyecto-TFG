@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2>Registro</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label>Nombre</label>
+      <input type="text" class="form-control"
+             formControlName="name"
+             [ngClass]="{'is-invalid': submitted && registerForm.get('name')?.invalid}">
+      <div class="invalid-feedback" *ngIf="submitted && registerForm.get('name')?.invalid">
+        Nombre requerido
+      </div>
+    </div>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" class="form-control"
+             formControlName="email"
+             [ngClass]="{'is-invalid': submitted && registerForm.get('email')?.invalid}">
+      <div class="invalid-feedback" *ngIf="submitted && registerForm.get('email')?.invalid">
+        Email inválido
+      </div>
+    </div>
+    <div class="mb-3">
+      <label>Contraseña</label>
+      <input type="password" class="form-control"
+             formControlName="password"
+             [ngClass]="{'is-invalid': submitted && registerForm.get('password')?.invalid}">
+      <div class="invalid-feedback" *ngIf="submitted && registerForm.get('password')?.invalid">
+        Mínimo 6 caracteres
+      </div>
+    </div>
+    <button class="btn btn-primary">Registrarme</button>
+    <div *ngIf="successMsg" class="alert alert-success mt-3">{{ successMsg }}</div>
+    <div *ngIf="errorMsg"   class="alert alert-danger mt-3">{{ errorMsg }}</div>
+  </form>
+</div>

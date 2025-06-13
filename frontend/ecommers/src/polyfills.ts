@@ -3,7 +3,7 @@
  */
 
 /** Zone.js es imprescindible para la detección de cambios en Angular */
-import 'zone.js';  // ya incluido por Angular CLI
+import 'zone.js';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

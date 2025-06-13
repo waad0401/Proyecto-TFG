@@ -1,0 +1,28 @@
+<div class="container mt-4" *ngIf="!loading && product; else loadingTpl">
+  <div class="row">
+    <div class="col-md-6">
+      <img [src]="imageBase + '/' + product.image"
+           class="img-fluid" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <h4>{{ product.price | currency:'EUR' }}</h4>
+      <div class="mb-3">
+        <label>Cantidad:</label>
+        <input type="number" class="form-control w-25"
+               [(ngModel)]="quantity"
+               [min]="1" [max]="product.stock">
+      </div>
+      <button class="btn btn-primary"
+              (click)="addToCart()"
+              [disabled]="product.stock === 0">
+        {{ product.stock > 0 ? 'Añadir al carrito' : 'Sin stock' }}
+      </button>
+      <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
+    </div>
+  </div>
+</div>
+<ng-template #loadingTpl>
+  <div class="text-center mt-5">Cargando producto…</div>
+</ng-template>

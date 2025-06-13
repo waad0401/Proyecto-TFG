@@ -1,58 +1,30 @@
-<!-- src/app/product-detail/product-detail.html -->
-<div class="container mt-5">
-
-  <!-- Loading -->
-  <div *ngIf="loading" class="text-center">Cargando...</div>
-
-  <!-- Product Detail -->
-  <div *ngIf="!loading && product; else errorTpl">
-    <div class="row">
-      <!-- Imagen -->
-      <div class="col-md-6">
-        <img
-          [src]="imageSrc()"
-          class="img-fluid mb-4"
-          alt="{{ product.name }}"
-        />
+<div *ngIf="loading" class="text-center">Cargando detalles…</div>
+<ng-container *ngIf="!loading && product; else errTpl">
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]="product.image" class="img-fluid rounded-start" alt="{{ product.name }}">
       </div>
-
-      <!-- Datos y acción -->
-      <div class="col-md-6">
-        <h2>{{ product.name }}</h2>
-        <p>{{ product.description }}</p>
-        <h4 class="mb-3">{{ product.price | currency:'EUR' }}</h4>
-
-        <!-- Stock y cantidad -->
-        <ng-container *ngIf="product.stock > 0; else noStockTpl">
-          <div class="mb-3">
-            <label for="qty" class="form-label">Cantidad:</label>
-            <input
-              type="number"
-              id="qty"
-              [(ngModel)]="quantity"
-              [min]="1"
-              [max]="product.stock"
-              class="form-control"
-            />
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">{{ product.description }}</p>
+          <h6>{{ product.price | currency:'EUR' }}</h6>
+          <div class="mb-2">
+            <label for="qty">Cantidad:</label>
+            <input id="qty" type="number" class="form-control w-25 d-inline"
+                   [(ngModel)]="quantity" [min]="1" [max]="product.stock">
           </div>
-          <button class="btn btn-primary" (click)="addToCart()">
-            Añadir al carrito
+          <button class="btn btn-primary"
+                  (click)="addToCart()"
+                  [disabled]="product.stock===0">
+            {{ product.stock>0 ? 'Añadir al carrito' : 'Sin stock' }}
           </button>
-          <small class="text-muted d-block mt-2">
-            Stock disponible: {{ product.stock }}
-          </small>
-        </ng-container>
-
-        <!-- Sin stock -->
-        <ng-template #noStockTpl>
-          <span class="badge bg-secondary">Sin stock</span>
-        </ng-template>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- Error -->
-  <ng-template #errorTpl>
-    <div class="alert alert-danger">{{ errorMsg }}</div>
-  </ng-template>
-</div>
+</ng-container>
+<ng-template #errTpl>
+  <div class="alert alert-danger">{{ error }}</div>
+</ng-template>

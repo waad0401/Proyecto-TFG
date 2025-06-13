@@ -1,0 +1,25 @@
+<div class="container mt-4">
+  <h2>Checkout</h2>
+  <div *ngIf="!items.length" class="alert alert-info">No hay artículos para pagar.</div>
+  <div *ngIf="items.length">
+    <table class="table">
+      <thead>
+        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let it of items">
+          <td>{{ it.product.name }}</td>
+          <td>{{ it.product.price | currency:'EUR' }}</td>
+          <td>{{ it.quantity }}</td>
+          <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Total a pagar: {{ total | currency:'EUR' }}</h4>
+    <button class="btn btn-success" (click)="placeOrder()" [disabled]="loading">
+      {{ loading ? 'Procesando…' : 'Pagar ahora' }}
+    </button>
+    <div *ngIf="successMsg" class="alert alert-success mt-3">{{ successMsg }}</div>
+    <div *ngIf="errorMsg"   class="alert alert-danger mt-3">{{ errorMsg }}</div>
+  </div>
+</div>

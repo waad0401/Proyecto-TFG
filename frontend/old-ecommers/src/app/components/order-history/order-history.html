@@ -1,0 +1,45 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Historial de Pedidos</h2>
+  <div *ngIf="loading" class="text-center">Cargando...</div>
+  <div *ngIf="!loading && !orders.length">
+    <p>No tienes pedidos.</p>
+    <a routerLink="/" class="btn btn-link">Comprar ahora</a>
+  </div>
+  <div *ngIf="orders.length">
+    <div *ngFor="let o of orders" class="card mb-4">
+      <div class="card-header">
+        Pedido #{{ o.id }} — {{ o.date | date:'short' }} — {{ o.status }}
+      </div>
+      <div class="card-body">
+        <table class="table mb-3">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of o.items">
+              <td>
+                <img
+                  [src]="imageSrc(it.product.image)"
+                  alt="{{ it.product.name }}"
+                  width="50"
+                  class="me-2"
+                />
+                {{ it.product.name }}
+              </td>
+              <td>{{ it.quantity }}</td>
+              <td>{{ it.product.price | currency:'EUR' }}</td>
+              <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Total: {{ o.total | currency:'EUR' }}</h5>
+      </div>
+    </div>
+  </div>
+  <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+</div>

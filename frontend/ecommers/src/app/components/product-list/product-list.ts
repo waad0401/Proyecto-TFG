@@ -1,49 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs/operators';
-import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product';
-import { CartService } from '../../services/cart.service';
-import { environment } from '../../../environments/environment';
+import { CommonModule }       from '@angular/common';
+import { RouterLink }         from '@angular/router';
+import { ProductService }     from '../../services/product.service';
+import { CartService }        from '../../services/cart.service';
 
 @Component({
+  standalone: true,
   selector: 'app-product-list',
   templateUrl: './product-list.html',
-  styleUrls: ['./product-list.css']
+  styleUrls: ['./product-list.css'],
+  imports: [CommonModule, RouterLink]
 })
-
 export class ProductListComponent implements OnInit {
-  products: Product[] = [];
+  products = [];
   loading = true;
-  errorMsg = '';
+  error = '';
 
-  // Base URL de imágenes (desde environment)
-  private readonly imageBase = environment.imageBaseUrl;
+  constructor(private ps: ProductService, private cs: CartService) {}
 
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService
-  ) {}
-
-  ngOnInit(): void {
-    this.productService.getAll().pipe(
-      // Asegura que 'loading' se desactive tanto en éxito como en error
-      finalize(() => this.loading = false)
-    ).subscribe({
-      next: data => {
-        this.products = data;
-      },
-      error: () => {
-        this.errorMsg = 'No se pudieron cargar los productos';
-      }
+  ngOnInit() {
+    this.ps.getAll().subscribe({
+      next: data => { this.products = data; this.loading = false; },
+      error: () => { this.error = 'Error loading products'; this.loading = false; }
     });
   }
 
-  addToCart(product: Product): void {
-    this.cartService.addItem(product);
-  }
-
-  // Crear la ruta de donde estaran las imagenes
-  imageSrc(p: Product): string {
-    return `${this.imageBase}/${p.image}`;
-  }
+  add(p: any) { this.cs.addItem(p); }
 }

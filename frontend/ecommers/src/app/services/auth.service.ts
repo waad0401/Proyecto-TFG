@@ -1,38 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
-import { User } from '../models/user';
+import { environment } from '../../environments/environment';
 
-interface LoginResponse { token: string; }
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private base = `${environment.apiUrl}/auth`;
+  private tokenKey = 'JWT_TOKEN';
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string) {
-    return this.http.post<LoginResponse>(`${this.base}/login`, { email, password })
-      .pipe(tap(res => localStorage.setItem(environment.jwtTokenKey, res.token)));
+  register(name: string, email: string, password: string) {
+    return this.http.post(`${environment.apiUrl}/auth/register`, { name, email, password });
   }
 
-  register(name: string, email: string, password: string) {
-    return this.http.post(`${this.base}/register`, { name, email, password });
+  login(email: string, password: string) {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/auth/login`, { email, password })
+      .pipe(tap(res => localStorage.setItem(this.tokenKey, res.token)));
   }
 
   logout() {
-    localStorage.removeItem(environment.jwtTokenKey);
-  }
-
-  isAuthenticated$() {
-    // Podrías implementar un BehaviorSubject para emitir cambios
-    return this.http.get<boolean>(`${this.base}/is-authenticated`);
+    localStorage.removeItem(this.tokenKey);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(environment.jwtTokenKey);
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 }

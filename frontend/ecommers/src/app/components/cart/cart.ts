@@ -1,49 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../services/cart.service';
-import { Router } from '@angular/router';
-import { CartItem } from '../../models/cart-item';
-import { environment } from '../../../environments/environment';
+import { Component, OnInit }  from '@angular/core';
+import { CommonModule }       from '@angular/common';
+import { CartService }        from '../../services/cart.service';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-cart',
   templateUrl: './cart.html',
-  styleUrls: ['./cart.css']
+  styleUrls: ['./cart.css'],
+  imports: [CommonModule, RouterLink]
 })
-
 export class CartComponent implements OnInit {
-  items: CartItem[] = [];
+  items: any[] = [];
   total = 0;
-  imageBase = environment.imageBaseUrl;
 
   constructor(
-    private cartService: CartService,
+    private cs: CartService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.cartService.items$.subscribe(items => {
-      this.items = items;
-      this.total = this.items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    this.cs.items$.subscribe(it => {
+      this.items = it;
+      this.total = it.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
     });
   }
 
-  updateQty(item: CartItem, newQty: number): void {
-    if (newQty > 0) {
-      this.cartService.updateQuantity(item.product.id, newQty);
+  updateQty(item: any, qty: number) {
+    if (qty > 0) {
+      this.cs.updateQuantity(item.product.id, qty);
     } else {
-      this.cartService.removeItem(item.product.id);
+      this.cs.removeItem(item.product.id);
     }
   }
 
-  clearCart(): void {
-    this.cartService.clearCart();
+  clear() {
+    this.cs.clearCart();
   }
 
-  checkout(): void {
+  goCheckout() {
     this.router.navigate(['/checkout']);
-  }
-
-  imageSrc(p: CartItem): string {
-    return `${this.imageBase}/${p.product.image}`;
   }
 }

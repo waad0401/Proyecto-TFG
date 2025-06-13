@@ -1,34 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { CartService } from '../../services/cart.service';
-import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
+import { Component }    from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterModule } from '@angular/router';
+import { AuthService }  from '../../services/auth.service';
+import { CartService }  from '../../services/cart.service';
 
 @Component({
+  standalone: true,
   selector: 'app-navbar',
   templateUrl: './navbar.html',
-  styleUrls: ['./navbar.css']
+  styleUrls: ['./navbar.css'],
+  imports: [CommonModule, RouterModule]
 })
-export class NavbarComponent implements OnInit {
-  isLogged = false;
+export class NavbarComponent {
+  isLogged = this.auth.isLoggedIn();
   cartCount = 0;
-  imageBase = environment.imageBaseUrl; // '/imagenes'
 
-  constructor(
-    private auth: AuthService,
-    private cartService: CartService,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.auth.isAuthenticated$().subscribe(logged => this.isLogged = logged);
-    this.cartService.items$.subscribe(items =>
-      this.cartCount = items.reduce((sum, i) => sum + i.quantity, 0)
-    );
+  constructor(private auth: AuthService, private cart: CartService) {
+    this.cart.items$.subscribe(it => this.cartCount = it.reduce((s,x)=>s+x.quantity,0));
   }
 
-  logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
+  logout() { this.auth.logout(); }
 }

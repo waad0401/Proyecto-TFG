@@ -1,31 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { Order } from '../models/order';
+import { CartItem } from '../models/cart-item';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class OrderService {
-  private api = `${environment.apiUrl}/orders`;
-
   constructor(private http: HttpClient) {}
 
-  /**
-   * Envía un nuevo pedido al backend.
-   * @param order Objeto con items y total
-   * @returns Observable de la respuesta del servidor
-   */
-  placeOrder(order: { items: any[]; total: number }): Observable<any> {
-    return this.http.post(this.api, order);
+  placeOrder(items: CartItem[]) {
+    // backend espera { items: [...], total: number }
+    const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    return this.http.post<Order>(`${environment.apiUrl}/orders`, { items, total });
   }
 
-  /**
-   * Obtiene el listado de pedidos del usuario.
-   * @returns Observable de array de pedidos
-   */
-  getUserOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.api);
+  getUserOrders() {
+    return this.http.get<Order[]>(`${environment.apiUrl}/orders`);
   }
 }

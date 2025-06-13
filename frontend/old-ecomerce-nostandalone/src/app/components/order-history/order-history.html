@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h2>Historial de Pedidos</h2>
+  <div *ngIf="loading" class="text-center">Cargando…</div>
+  <div *ngIf="!loading && !orders.length" class="alert alert-info">
+    No existen pedidos previos.
+  </div>
+  <div *ngFor="let o of orders" class="card mb-3" *ngIf="orders.length">
+    <div class="card-header">
+      Pedido #{{ o.id }} — {{ o.date | date:'short' }} — {{ o.status }}
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" *ngFor="let it of o.items">
+        {{ it.product.name }} × {{ it.quantity }}
+        <span class="float-end">{{ it.product.price | currency:'EUR' }}</span>
+      </li>
+      <li class="list-group-item">
+        <strong>Total:</strong>
+        <span class="float-end">{{ o.total | currency:'EUR' }}</span>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+</div>

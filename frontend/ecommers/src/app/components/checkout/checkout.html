@@ -1,41 +1,22 @@
-<div class="container mt-5">
-  <h2 class="mb-4">Checkout</h2>
-  <div *ngIf="items.length === 0">
-    <p>Carrito vacío.</p>
-    <a routerLink="/" class="btn btn-link">Comprar</a>
-  </div>
-  <div *ngIf="items.length">
-    <table class="table mb-3">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let it of items">
-          <td>
-            <img
-              [src]="imageSrc(it)"
-              alt="{{ it.product.name }}"
-              width="50"
-              class="me-2"
-            />
-            {{ it.product.name }}
-          </td>
-          <td>{{ it.product.price | currency:'EUR' }}</td>
-          <td>{{ it.quantity }}</td>
-          <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <h4>Total a pagar: {{ total | currency:'EUR' }}</h4>
-    <button class="btn btn-success" (click)="placeOrder()" [disabled]="loading">
-      {{ loading ? 'Procesando...' : 'Confirmar Pedido' }}
-    </button>
-    <div class="text-success mt-3" *ngIf="successMsg">{{ successMsg }}</div>
-    <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
-  </div>
+<div *ngIf="!items.length" class="alert alert-info">
+  No hay artículos para pagar.
+</div>
+<div *ngIf="items.length">
+  <table class="table">
+    <thead>
+      <tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let it of items">
+        <td>{{ it.product.name }}</td>
+        <td>{{ it.quantity }}</td>
+        <td>{{ it.product.price | currency:'EUR' }}</td>
+        <td>{{ (it.product.price * it.quantity) | currency:'EUR' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5>Total a pagar: {{ total | currency:'EUR' }}</h5>
+  <button class="btn btn-success mt-3" (click)="placeOrder()">Confirmar pedido</button>
+  <div *ngIf="success" class="alert alert-success mt-3">{{ success }}</div>
+  <div *ngIf="error"   class="alert alert-danger mt-3">{{ error }}</div>
 </div>
