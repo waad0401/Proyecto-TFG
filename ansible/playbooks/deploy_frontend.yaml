@@ -1,6 +1,76 @@
 ---
 - name:
-  hosts:
+  hosts: frontend_master
   become: yes
 
+  vars_files:
+  - ../vars/vars.yaml
+  
   tasks:
+    - name: Sincronizar código fuente
+      synchronize:
+        src:  "../../frontend/ecommerce-frontend"
+        dest: "{{ app_dir }}/"
+        recursive: yes
+
+    # 3) Reemplazar CHANGEME por la IP/dominio real
+    - name: Buscar archivos del proyecto
+      find:
+        paths: "/tmp"
+        recurse: yes
+        file_type: file
+      register: project_files
+
+    - name: Sustituir CHANGEME → {{ ip_api }}
+      replace:
+        path: "{{ item.path }}"
+        regexp: 'CHANGEME'
+        replace: "{{ ip_api }}"
+      loop: "{{ project_files.files }}"
+
+    # 4) Instalar dependencias y compilar
+    - name: npm install
+      command: npm install --omit=dev
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: npm run build
+      command: npm run build
+      args:
+        chdir: "{{ app_dir }}"
+
+    # 5) Publicar dist/ en /var/www/html
+    - name: Copiar bundle a "/var/www/html"
+      copy:
+        src:  "{{ app_dir }}/dist/"
+        dest: "/var/www/html"
+        recursive: yes
+        remote_src: yes 
+        recursive: yes             
+        owner: www-data             
+        group: www-data
+
+
+    - name: Copiar las imagenes
+      synchronize:
+        src:  "../../frontend/imagenes/"
+        dest: "/var/www/imagenes/"
+        recursive: yes
+
+
+    # 6) Copiar .htaccess preexistente
+    - name: Copiar .htaccess
+      copy:
+        src:  "../conf/.htaccess"
+        dest: "/var/www/html/.htaccess"
+        owner: www-data
+        group: www-data
+        mode: "0644"
+
+    # 7) Asegurar permisos finales
+    - name: Ajustar permisos en "/var/www/html"
+      file:
+        path: "/var/www/html"
+        owner: www-data
+        group: www-data
+        recurse: yes

@@ -8,6 +8,9 @@
 [backend]
 # CHANGE_BACK_1
 
+[middleware]
+# CHANGE_MIDDLE
+
 [nfs]
 # CHANGE_NFS_1
 

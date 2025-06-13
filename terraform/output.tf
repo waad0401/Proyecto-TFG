@@ -25,8 +25,8 @@ output "instance_id_frontend-01" {
   value = aws_instance.frontend-01.id
 }
 
-output "sg_loadbalancer_id" {
-  value = aws_security_group.loadbalancer.id
+output "sg_middleware_id" {
+  value = aws_security_group.middleware.id
 }
 
 output "vpc_default_id" {

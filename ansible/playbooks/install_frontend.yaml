@@ -23,6 +23,19 @@
         src: ../conf/000-default.conf
         dest: /etc/apache2/sites-available/
         mode: 0755
+    - name: Instalar NVM 
+      shell: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+      args:
+        creates: '\. "$HOME/.nvm/nvm.sh"'
+
+    - name: Instalar Node.js 22 via NVM
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        . "$NVM_DIR/nvm.sh"
+        nvm install 22
+      args:
+        executable: /bin/bash
 
     - name : Reinicamos el apache
       service:

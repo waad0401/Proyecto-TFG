@@ -1,0 +1,103 @@
+---
+- name: Desplegar middleware Node.js y dejarlo corriendo como servicio
+  hosts: web
+  become: yes
+
+  vars:
+    # ---------- EDITA SOLO ESTAS VARIABLES -----------------
+    src_dir:      "../../middleware"     # proyecto local
+    dest_dir:     "/opt/middleware"      # destino en el servidor
+    service_name: "middleware"           # systemd unit
+    ip_back:      "192.168.1.50"         # reemplaza CHANGEME en src/.env
+    app_entry:    "index.js"             # archivo principal
+    nvm_version:  "v0.40.2"
+    node_major:   "22"                   # Node v22.x
+    service_user: "{{ ansible_user }}"   # usuario SSH actual
+    # -------------------------------------------------------
+
+  tasks:
+  # 1 ▸ Copiar el código al host
+  - name: Copiar proyecto al servidor
+    synchronize:
+      src:  "{{ src_dir }}/"
+      dest: "{{ dest_dir }}/"
+      recursive: yes
+      delete: yes
+
+  # 2 ▸ Sustituir CHANGEME en .env
+  - name: Reemplazar CHANGEME en .env
+    replace:
+      path: "{{ dest_dir }}/src/.env"
+      regexp: 'CHANGEME'
+      replace: "{{ ip_back }}"
+      backup: yes
+
+  # 3 ▸ Instalar cliente MySQL (CLI) por si se necesita
+  - name: Instalar cliente MySQL en Debian/Ubuntu
+    apt:
+      name: default-mysql-client
+      state: present
+      update_cache: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Instalar cliente MySQL en RHEL/Alma/Rocky
+    yum:
+      name: mysql
+      state: present
+    when: ansible_os_family == "RedHat"
+
+  # 4 ▸ Instalar NVM (solo si falta)
+  - name: Instalar NVM {{ nvm_version }}
+    shell: |
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash
+    args:
+      creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+    become: false
+
+  # 5 ▸ Instalar Node {{ node_major }} con NVM
+  - name: Instalar Node {{ node_major }} via NVM
+    shell: |
+      . "$HOME/.nvm/nvm.sh"
+      nvm install {{ node_major }}
+    args:
+      executable: /bin/bash
+    become: false
+
+  # 6 ▸ Instalar dependencias npm
+  - name: npm install --omit=dev
+    shell: |
+      . "$HOME/.nvm/nvm.sh"
+      cd "{{ dest_dir }}"
+      npm install --omit=dev
+    args:
+      executable: /bin/bash
+    become: false
+
+  # 7 ▸ Crear servicio systemd
+  - name: Crear servicio systemd {{ service_name }}
+    copy:
+      dest: "/etc/systemd/system/{{ service_name }}.service"
+      mode: "0644"
+      content: |
+        [Unit]
+        Description=Middleware Node.js ({{ service_name }})
+        After=network.target
+
+        [Service]
+        ExecStart=/bin/bash -c '. $HOME/.nvm/nvm.sh && node {{ dest_dir }}/{{ app_entry }}'
+        WorkingDirectory={{ dest_dir }}
+        User={{ service_user }}
+        Restart=on-failure
+        Environment=NODE_ENV=production
+        LimitNOFILE=65535
+
+        [Install]
+        WantedBy=multi-user.target
+
+  # 8 ▸ Recargar systemd y arrancar
+  - name: Habilitar y arrancar {{ service_name }}
+    systemd:
+      daemon_reload: yes
+      name: "{{ service_name }}"
+      enabled: yes
+      state: restarted

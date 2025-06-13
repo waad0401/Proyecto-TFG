@@ -1,3 +1,5 @@
 nfs:
   frontend_network: "172.31.0.0/16"
   server: 172.31.28.63
+ip_api:
+app_dir: "/opt/frontend" 

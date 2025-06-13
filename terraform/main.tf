@@ -19,8 +19,8 @@ resource "aws_security_group" "frontend" {
   name        = var.sg_frontend
   description = var.sg_description
 }
-resource "aws_security_group" "loadbalancer" {
-  name        = var.sg_loadbalancer
+resource "aws_security_group" "middleware" {
+  name        = var.sg_middleware
   description = var.sg_description
 }
 resource "aws_security_group" "nfs" {
@@ -55,13 +55,13 @@ resource "aws_security_group_rule" "ingress_backend" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "ingress_loadbalancer" {
-  security_group_id = aws_security_group.loadbalancer.id
+resource "aws_security_group_rule" "ingress_middleware" {
+  security_group_id = aws_security_group.middleware.id
   type              = "ingress"
 
-  count       = length(var.Puerto_loadbalancer)
-  from_port   = var.Puerto_loadbalancer[count.index]
-  to_port     = var.Puerto_loadbalancer[count.index]
+  count       = length(var.Puerto_middleware)
+  from_port   = var.Puerto_middleware[count.index]
+  to_port     = var.Puerto_middleware[count.index]
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 }
@@ -81,7 +81,7 @@ resource "aws_security_group_rule" "ingress_nfs" {
 
 resource "aws_security_group_rule" "egress" {
   for_each = { 
-    loadbalancer = aws_security_group.loadbalancer.id,
+    middleware = aws_security_group.middleware.id,
     nfs = aws_security_group.nfs.id,
     frontend = aws_security_group.frontend.id,
     backend = aws_security_group.backend.id

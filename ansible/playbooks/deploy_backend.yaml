@@ -2,5 +2,36 @@
 - name:
   hosts:
   become: yes
+  vars:
+    src_dir:  "../../backend"   # carpeta LOCAL con lanzar.sh
+    dest_dir: "/opt/proyecto"            # carpeta en el servidor
 
   tasks:
+    - name : Actulizamos los repositorios
+      apt:
+        update_cache: yes
+
+    - name: Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+    
+    # 1) Copiar todo el directorio al servidor
+    - name: Sincronizar {{ src_dir }} → {{ dest_dir }}
+      synchronize:
+        src:  "{{ src_dir }}/"
+        dest: "{{ dest_dir }}/"
+        recursive: yes
+        delete: yes
+
+    # 2) Asegurar permisos de ejecución en lanzar.sh
+    - name: Dar permisos +x a lanzar.sh
+      file:
+        path: "{{ dest_dir }}/lanzar.sh"
+        mode: "0755"
+
+    # 3) Ejecutar el script
+    - name: Ejecutar lanzar.sh
+      shell: ./lanzar.sh
+      args:
+        chdir: "{{ dest_dir }}"

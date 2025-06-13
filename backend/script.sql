@@ -45,3 +45,27 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   FOREIGN KEY (`product_id`) REFERENCES `products`(`id`)
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
+
+
+INSERT INTO `products` (`name`, `description`, `price`, `stock`, `image`)
+VALUES
+  ('Cigarrillos Red 20',
+   'Cajetilla de 20 cigarrillos con mezcla rubia clásica y filtro estándar.',
+   5.20, 500, 'cigarrillos_red20.jpg'),
+
+  ('Tabaco Picadura 50 g',
+   'Bolsa de tabaco rubio para liar, formato económico de 50 g.',
+   7.75, 300, 'tabaco_picadura_50g.jpg'),
+
+  ('Papelillos Finos 120',
+   'Librillo de 120 papelillos ultra finos, combustión lenta (King Size).',
+   1.30, 800, 'papelillos_finos_120.jpg'),
+
+  ('Filtros Extra Long 150',
+   'Bolsa de 150 filtros extra largos de 8 mm para reducir nicotina y alquitrán.',
+   1.90, 0, 'filtros_extralong_150.jpg'),
+
+  ('Encendedor Metálico Recargable',
+   'Encendedor metálico a gas, llama regulable y recargable, varios colores.',
+   3.50, 200, 'encendedor_metalico.jpg');
+

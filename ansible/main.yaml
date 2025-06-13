@@ -1,7 +1,7 @@
 ---
-#- import_playbook: playbooks/install_backend.yaml
+- import_playbook: playbooks/deploy_backend.yaml
 - import_playbook: playbooks/install_frontend.yaml
+- import_playbook: playbooks/deploy_middle.yaml
 - import_playbook: playbooks/setup_nfs_server.yaml
 - import_playbook: playbooks/setup_nfs_client.yaml
-# - import_playbook: playbooks/deploy_backend.yaml
-# - import_playbook: playbooks/deploy_frontend.yaml
+- import_playbook: playbooks/deploy_frontend.yaml

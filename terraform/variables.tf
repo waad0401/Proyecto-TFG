@@ -4,10 +4,10 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "Puerto_loadbalancer" {
-  description = "Puertos de loadbalancer"
+variable "Puerto_middleware" {
+  description = "Puertos de middleware"
   type        = list(number)
-  default     = [80, 443]
+  default     = [80, 3306, 3000]
 }
 variable "Puerto_frontend" {
   description = "Puertos de frontend"
@@ -51,10 +51,10 @@ variable "sg_description" {
   default     = "Descripcion del grupo de seguridad"
 }
 
-variable "sg_loadbalancer" {
+variable "sg_middleware" {
   description = "Descripción del grupo de seguridad"
   type        = string
-  default     = "sg_loadbalancer"
+  default     = "sg_middleware"
 }
 
 variable "ami_id" {
