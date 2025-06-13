@@ -1,7 +1,11 @@
-provider "aws" {
-  region = var.region
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
 }
-
 # obtencion de datos que estan por defecto
 data "aws_vpc" "default" { 
  default = true
