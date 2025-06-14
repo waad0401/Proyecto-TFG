@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '../store/auth';
 import { useRouter } from 'vue-router';
 
 const name     = ref('');

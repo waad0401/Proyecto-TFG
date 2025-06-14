@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '../store/auth';
 import { useRouter, useRoute } from 'vue-router';
 
 const email    = ref('');

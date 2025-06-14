@@ -27,7 +27,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { useCartStore } from '@/store/cart';
+import { useCartStore } from '../store/cart';
 
 const cart = useCartStore();
 const { items, totalPrice } = storeToRefs(cart);

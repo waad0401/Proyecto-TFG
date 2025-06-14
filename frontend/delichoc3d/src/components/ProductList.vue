@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import api, { config } from '@/services/api';
+import api, { config } from '../services/api';
 
 const products = ref([]);
 onMounted(async () => {

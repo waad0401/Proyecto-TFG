@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import api from '@/services/api';
-import { useCartStore } from '@/store/cart';
+import api from '../services/api';
+import { useCartStore } from '../store/cart';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({

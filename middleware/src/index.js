@@ -10,6 +10,7 @@ const socketIo   = require('socket.io');
 const authRoutes    = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes   = require('./routes/orders');
+const morgan    = require('morgan');
 const stockSocket   = require('./sockets/stockSocket');
 
 const app    = express();
@@ -19,13 +20,8 @@ const io     = socketIo(server, { cors: { origin: '*' } });
 // 1) Middlewares generales
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'));
 
-// 2) Sirve tu NFS de imágenes montado en /mnt/images
-//    Cualquier GET /images/archivo.jpg servirá /mnt/images/archivo.jpg
-app.use(
-  '/images',
-  express.static('/mnt/images')
-);
 
 // 3) Rutas de la API REST
 app.use('/api/auth',    authRoutes);

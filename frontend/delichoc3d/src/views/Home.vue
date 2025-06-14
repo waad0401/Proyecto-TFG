@@ -13,6 +13,6 @@
 </template>
 
 <script setup>
-import ProductCarousel from '@/components/ProductCarousel.vue';
-import ProductList     from '@/components/ProductList.vue';
+import ProductCarousel from '../components/ProductCarousel.vue';
+import ProductList     from '../components/ProductList.vue';
 </script>

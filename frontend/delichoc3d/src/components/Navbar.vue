@@ -36,7 +36,7 @@
 <script setup>
 import { computed } from 'vue';
 import { Offcanvas } from 'bootstrap';          // JS modular :contentReference[oaicite:6]{index=6}
-import { useCartStore } from '@/store/cart';
+import { useCartStore } from '../store/cart';
 
 const items = computed(() => useCartStore().totalItems);
 function close () { Offcanvas.getOrCreateInstance('#offMenu').hide(); }

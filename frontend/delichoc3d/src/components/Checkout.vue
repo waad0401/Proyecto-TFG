@@ -17,8 +17,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import api from '@/services/api';
-import { useCartStore } from '@/store/cart';
+import api from '../services/api';
+import { useCartStore } from '../store/cart';
 
 const cart   = useCartStore();
 const total  = cart.totalPrice;

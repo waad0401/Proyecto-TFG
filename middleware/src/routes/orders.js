@@ -1,9 +1,15 @@
 const express = require('express');
-const auth = require('../middleware/auth');
-const { placeOrder, getUserOrders } = require('../controllers/orderController');
-const router = express.Router();
+const auth    = require('./auth');                     // middleware JWT
+const {
+  placeOrder,
+  getUserOrders
+} = require('../controllers/orderController');
 
-router.post('/', auth, placeOrder);
-router.get('/my', auth, getUserOrders);
+module.exports = (io) => {
+  const router = express.Router();
 
-module.exports = router;
+  router.post('/', auth, placeOrder(io));   // pasa io al controlador
+  router.get('/my', auth, getUserOrders);
+
+  return router;
+};
