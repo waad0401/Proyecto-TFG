@@ -1,39 +1,48 @@
-const db = require('../config/db');
+/* --------------------------------------------------------------------------
+   Controlador de pedidos
+-------------------------------------------------------------------------- */
+const db            = require('../config/db');
+const { randomUUID } = require('crypto');          // UUID v4 nativo
 
-/* ---------- Crear pedido (inyecta io) ---------- */
+/* ---------------- Crear pedido ---------------- */
 exports.placeOrder = (io) => async (req, res) => {
-  const { items, total } = req.body;            // items = [{ productoId, cantidad, precio }]
-  const conn = await db.getConnection();
+  /* 1) Verifica autenticación */
+  if (!req.user?.id) {
+    return res.status(401).json({ mensaje: 'No autenticado' });
+  }
 
+  const { items, total } = req.body;              // [{ productoId, cantidad, precio }]
+  const pedidoId = randomUUID();                  // p.ej. '830bc625-c096-…'
+
+  const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
-    /* 1) crea pedido */
-    const [pedidoRes] = await conn.query(
-      'INSERT INTO orders (usuario_id, total) VALUES (?,?)',
-      [req.user.id, total]
+    /* 2) Cabecera de pedido (estado pendiente) */
+    await conn.query(
+      'INSERT INTO orders (id, usuario_id, total, estado) VALUES (?,?,?,?)',
+      [pedidoId, req.user.id, total, 'pendiente']
     );
-    const pedidoId = pedidoRes.insertId;
 
-    /* 2) inserta líneas + actualiza stock */
-    for (const it of items) {
+    /* 3) Detalle de líneas + actualización de stock */
+    for (const i of items) {
       await conn.query(
         `INSERT INTO order_items (pedido_id, producto_id, cantidad, precio)
          VALUES (?,?,?,?)`,
-        [pedidoId, it.productoId, it.cantidad, it.precio]
+        [pedidoId, i.productoId, i.cantidad, i.precio]
       );
 
       await conn.query(
         'UPDATE products SET stock = stock - ? WHERE id = ?',
-        [it.cantidad, it.productoId]
+        [i.cantidad, i.productoId]
       );
 
-      /* notifica stock actualizado */
+      /* 4) WebSocket: notifica nuevo stock */
       const [[{ stock }]] = await conn.query(
-        'SELECT stock FROM products WHERE id = ?', [it.productoId]
+        'SELECT stock FROM products WHERE id = ?', [i.productoId]
       );
       io.emit('stockActualizado', {
-        productoId: it.productoId,
+        productoId: i.productoId,
         nuevoStock: stock
       });
     }
@@ -42,16 +51,20 @@ exports.placeOrder = (io) => async (req, res) => {
     res.status(201).json({ pedidoId });
   } catch (err) {
     await conn.rollback();
-    res.status(500).json({ mensaje: 'Error al crear pedido', err });
+    console.error(err);
+    res.status(500).json({ mensaje: 'Error al crear pedido' });
   } finally {
     conn.release();
   }
 };
 
-/* ---------- Pedidos del usuario logueado ---------- */
+/* ---------------- Pedidos del usuario ---------------- */
 exports.getUserOrders = async (req, res) => {
   const [filas] = await db.query(
-    'SELECT id, total, fecha, estado FROM orders WHERE usuario_id = ?',
+    'SELECT id, total, fecha, estado \
+       FROM orders \
+      WHERE usuario_id = ? \
+      ORDER BY fecha DESC',
     [req.user.id]
   );
   res.json(filas);

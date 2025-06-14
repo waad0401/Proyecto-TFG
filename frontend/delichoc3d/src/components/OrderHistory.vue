@@ -16,7 +16,7 @@
         <tr v-for="p in pedidos" :key="p.id">
           <td>{{ p.id }}</td>
           <td>{{ new Date(p.fecha).toLocaleDateString() }}</td>
-          <td>{{ p.total.toFixed(2) }} €</td>
+          <td>{{ (+p.total).toFixed(2) }} €</td>
           <td>{{ p.estado }}</td>
         </tr>
       </tbody>

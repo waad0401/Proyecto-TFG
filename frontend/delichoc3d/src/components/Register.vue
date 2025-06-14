@@ -6,40 +6,21 @@
       <!-- Nombre -->
       <div class="mb-3">
         <label class="form-label" for="nombre">Nombre</label>
-        <input
-          id="nombre"
-          v-model.trim="nombre"
-          class="form-control"
-          minlength="2"                                   <!-- val. HTML5 -->
-          required
-        />
+        <input id="nombre" v-model.trim="nombre" class="form-control" minlength="2" required />
         <small v-if="msg('nombre')" class="text-danger">{{ msg('nombre') }}</small>
       </div>
 
       <!-- Correo -->
       <div class="mb-3">
         <label class="form-label" for="correo">Correo electrónico</label>
-        <input
-          id="correo"
-          v-model.trim="correo"
-          type="email"
-          class="form-control"
-          required
-        />
+        <input id="correo" v-model.trim="correo" type="email" class="form-control" require />
         <small v-if="msg('correo')" class="text-danger">{{ msg('correo') }}</small>
       </div>
 
       <!-- Contraseña -->
       <div class="mb-4">
         <label class="form-label" for="contrasena">Contraseña</label>
-        <input
-          id="contrasena"
-          v-model="contrasena"
-          type="password"
-          class="form-control"
-          minlength="8"                                   <!-- 8 caracteres -->
-          required
-        />
+        <input id="contrasena" v-model="contrasena" type="password" class="form-control" minlength="8" required />
         <small v-if="msg('contrasena')" class="text-danger">
           {{ msg('contrasena') }}
         </small>
