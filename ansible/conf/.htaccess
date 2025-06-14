@@ -1,17 +1,9 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase "/"
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 
-  # ----- Ajusta SOLO si la app NO está en la raíz -----
-  #  Ejemplo:   /       → RewriteBase /
-  #             /shop/  → RewriteBase /shop/
-  RewriteBase /
-
-  # Ignora archivos y directorios reales
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-
-  # Todo lo demás vuelve a index.html
-  #  Cambia también la ruta si usas subcarpeta (/shop/index.html)
-  RewriteRule . /index.html [L]
+  RewriteRule ^ index.html [L]
 </IfModule>

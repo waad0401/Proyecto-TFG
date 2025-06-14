@@ -34,45 +34,45 @@ elif [[ $respuesta == 'y' ]]; then
 	########################################
 
 
-	# echo "Instalacion de terraform"
-	# echo "Actualizacion de paquetes y dependencias necesarias"
-	# sudo apt-get update && sudo apt-get install -y gnupg software-properties-common > /dev/null
+	echo "Instalacion de terraform"
+	echo "Actualizacion de paquetes y dependencias necesarias"
+	sudo apt-get update && sudo apt-get install -y gnupg software-properties-common > /dev/null
 
-	# # Install the HashiCorp GPG key.
-	# wget -O- https://apt.releases.hashicorp.com/gpg | \
-	# gpg --dearmor | \
-	# sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+	# Install the HashiCorp GPG key.
+	wget -O- https://apt.releases.hashicorp.com/gpg | \
+	gpg --dearmor | \
+	sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
 
-	# # Verify the key's fingerprint.
-	# gpg --no-default-keyring \
-	# --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
-	# --fingerprint
+	# Verify the key's fingerprint.
+	gpg --no-default-keyring \
+	--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+	--fingerprint
 
-	# # Add the official HashiCorp repository to your system.
-	# echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-	# https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
-	# sudo tee /etc/apt/sources.list.d/hashicorp.list
+	# Add the official HashiCorp repository to your system.
+	echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+	https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+	sudo tee /etc/apt/sources.list.d/hashicorp.list
 
-	# echo "Instalamos el paquete de terraform "
-	# #Download the package information from HashiCorp.
-	# sudo apt update > /dev/null
+	echo "Instalamos el paquete de terraform "
+	#Download the package information from HashiCorp.
+	sudo apt update > /dev/null
 
-	# # Install Terraform from the new repository.
-	# sudo apt-get install terraform -y > /dev/null
+	# Install Terraform from the new repository.
+	sudo apt-get install terraform -y > /dev/null
 
 
-	# ########################################
-	# #####          Ansible	           #####
-	# ########################################
+	########################################
+	#####          Ansible	           #####
+	########################################
 
-	# echo "Instalacion de ansible "
-	# apt install ansible -y 
+	echo "Instalacion de ansible "
+	apt install ansible -y 
 
 	# ###################################################
 
 	cd terraform/
-	# terraform init
-	# terraform apply -auto-approve
+	terraform init
+	terraform apply -auto-approve
 	# Now we change the ips of the Ansible invetory
 	private_ip_nfs=$(terraform output --raw private_ip_nfs)
 	private_ip_frnt2=$(terraform output --raw private_ip_frontend-02)

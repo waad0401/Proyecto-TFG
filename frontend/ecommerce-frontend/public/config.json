@@ -1,4 +1,4 @@
 {
-  "apiBaseUrl": "http://CHANGEME:3000",
-  "imageBaseUrl": "http://CHANGEME:3000/images"
+  "apiBaseUrl": "http://localhost:3000/api",
+  "imageBaseUrl": "/images"
 }
