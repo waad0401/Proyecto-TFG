@@ -10,6 +10,7 @@ import 'aos/dist/aos.css';
 
 // Estilos Bootstrap (npm)
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap';
 
 // La app se monta sólo después de cargar config.json

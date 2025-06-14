@@ -1,44 +1,54 @@
-<!-- src/components/Navbar.vue -->
 <template>
   <nav class="navbar navbar-light bg-light shadow-sm fixed-top">
-    <div class="container align-items-center">
-
-      <!-- Brand -->
+    <div class="container">
+      <!-- Logo -->
       <RouterLink class="navbar-brand fw-bold" to="/">Delichoc 3D</RouterLink>
 
       <!-- Carrito -->
       <RouterLink to="/cart" class="btn position-relative me-2">
         <i class="bi bi-cart3 fs-4"></i>
-        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle px-2 rounded-pill">
-          {{ items }}
+        <span
+          v-if="itemCount"
+          class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+          {{ itemCount }}
         </span>
       </RouterLink>
 
-      <!-- Botón hamburger -->
-      <button class="navbar-toggler border-0"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasMenu"
-              aria-controls="offcanvasMenu">
+      <!-- Hamburguesa -->
+      <button
+        class="navbar-toggler border-0"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offMenu">
         <span class="navbar-toggler-icon"></span>
       </button>
     </div>
 
-    <!-- Offcanvas menu -->
-    <div id="offcanvasMenu" class="offcanvas offcanvas-end"
-         tabindex="-1" aria-labelledby="offcanvasLabel">
+    <!-- Menú lateral -->
+    <div id="offMenu" class="offcanvas offcanvas-end" tabindex="-1">
       <div class="offcanvas-header">
-        <h5 id="offcanvasLabel" class="mb-0">Menú</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        <h5 class="mb-0">Menú</h5>
+        <button class="btn-close" data-bs-dismiss="offcanvas"></button>
       </div>
 
       <div class="offcanvas-body">
-        <ul class="navbar-nav flex-column">
-          <li class="nav-item" @click="close"><RouterLink class="nav-link" to="/">Inicio</RouterLink></li>
-          <li class="nav-item" @click="close"><RouterLink class="nav-link" to="/about">Quiénes somos</RouterLink></li>
-          <li class="nav-item" @click="close"><RouterLink class="nav-link" to="/orders">Mis pedidos</RouterLink></li>
-          <li class="nav-item" @click="close"><RouterLink class="nav-link" to="/login">Iniciar sesión</RouterLink></li>
-        </ul>
+        <RouterLink class="nav-link mb-2" :to="'/'"          @click="close">Inicio</RouterLink>
+        <RouterLink class="nav-link mb-2" :to="'/about'"      @click="close">Quiénes somos</RouterLink>
+        <RouterLink class="nav-link mb-2" :to="'/orders'"     @click="close">Mis pedidos</RouterLink>
+
+        <RouterLink
+          v-if="!auth.isAuthenticated"
+          class="nav-link"
+          :to="'/auth/login'"
+          @click="close">
+          Entrar
+        </RouterLink>
+
+        <button
+          v-else
+          class="btn btn-outline-secondary w-100 mt-2"
+          @click="logout">
+          Salir
+        </button>
       </div>
     </div>
   </nav>
@@ -46,15 +56,20 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useCartStore } from '@/store/cart';
 import { Offcanvas } from 'bootstrap';
+import { useCartStore } from '@/store/cart';
+import { useAuthStore } from '@/store/auth';
 
-const { totalItems } = useCartStore();
-const items = computed(() => totalItems);
+const cart = useCartStore();
+const auth = useAuthStore();
+
+const itemCount = computed(() => cart.totalItems);
 
 function close () {
-  // Cierra el offcanvas tras navegar
-  const off = Offcanvas.getOrCreateInstance('#offcanvasMenu');
-  off.hide();
+  Offcanvas.getOrCreateInstance('#offMenu').hide();
+}
+function logout () {
+  auth.logout();
+  close();
 }
 </script>

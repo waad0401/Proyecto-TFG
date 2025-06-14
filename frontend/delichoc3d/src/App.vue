@@ -1,28 +1,37 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <!-- Barra de navegación fija -->
+  <Navbar />
+
+  <!-- Contenido de cada página -->
+  <main class="pt-5">
+    <router-view :key="$route.fullPath" v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </main>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup>
+import Navbar from '@/components/Navbar.vue';
+</script>
+
+<style>
+/* Ajusta altura total y margen por la navbar fija */
+html, body, #app {
+  height: 100%;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+main {
+  margin-top: 4rem; /* altura aprox. de la navbar */
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+/* Transición suave entre páginas */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

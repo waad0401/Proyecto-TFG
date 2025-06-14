@@ -5,7 +5,7 @@
     <!-- Bloque 1 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6" data-aos="fade-right">
-        <img src="/images/fabrica.jpg" class="img-fluid rounded shadow">
+        <img src="/images/fabrica.png" class="img-fluid rounded shadow">
       </div>
       <div class="col-md-6" data-aos="fade-left">
         <p class="lead">Delichoc 3D combina la tradición chocolatera con impresión alimentaria de última generación...</p>
@@ -15,7 +15,7 @@
     <!-- Bloque 2 (invertido) -->
     <div class="row align-items-center mb-5 flex-md-row-reverse">
       <div class="col-md-6" data-aos="fade-left">
-        <img src="/images/personalizado.jpg" class="img-fluid rounded shadow">
+        <img src="" class="img-fluid rounded shadow">
       </div>
       <div class="col-md-6" data-aos="fade-right">
         <p class="lead">Cada pieza se fabrica bajo demanda, reduciendo desperdicio...</p>

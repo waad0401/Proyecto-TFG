@@ -1,39 +1,76 @@
 import { defineStore } from 'pinia';
-import api from '../services/api';
+import api from '@/services/api';
+import { useAuthStore } from '@/store/auth';
 
 export const useCartStore = defineStore('cart', {
+  /* ---------- state ---------- */
   state: () => ({
-    items: [],          // siempre copia del servidor
+    items: [],        // [{ productoId, cantidad, nombre, precio, imagen }]
     loaded: false
   }),
 
+  /* ---------- getters ---------- */
   getters: {
-    totalItems: s => s.items.reduce((t, i) => t + i.qty, 0),
-    totalPrice: s => s.items.reduce((t, i) => t + i.qty * i.price, 0)
+    totalItems  : s => s.items.reduce((t, i) => t + i.cantidad, 0),
+    totalPrecio : s => s.items.reduce((t, i) => t + i.cantidad * i.precio, 0)
   },
 
+  /* ---------- actions ---------- */
   actions: {
-    async fetch() {
-      if (this.loaded) return;
-      const { data } = await api.get('/cart');
-      this.items  = data.items;
-      this.loaded = true;
+    /* 1) Cargar carrito del usuario después de login */
+    async fetch () {
+      if (this.loaded) return;                     // evita doble llamada
+      try {
+        const { data } = await api.get('/cart');   // GET /api/cart
+        this.items  = data.items;                  // [{ productoId, cantidad }]
+        this.loaded = true;
+      } catch (e) {
+        console.error('Error cargando carrito:', e);
+      }
     },
 
-    async add(product, qty = 1) {
-      await api.post('/cart', { productId: product.id, qty });
-      const idx = this.items.findIndex(i => i.id === product.id);
-      idx === -1 ? this.items.push({ ...product, qty })
-                 : (this.items[idx].qty += qty);
+    /* 2) Añadir producto (bloquea invitados) */
+    async add (producto, cantidad = 1) {
+      const auth = useAuthStore();
+
+      if (!auth.isAuthenticated) {
+        alert('Debes iniciar sesión para comprar');
+        window.location.href = '/auth/login';
+        return false;                              // indica redirección
+      }
+
+      await api.post('/cart', {                    // POST /api/cart
+        productoId: producto.id,
+        cantidad
+      });
+
+      const idx = this.items.findIndex(i => i.productoId === producto.id);
+      if (idx === -1) {
+        this.items.push({
+          productoId : producto.id,
+          nombre     : producto.nombre,
+          precio     : producto.precio,
+          imagen     : producto.imagen,
+          cantidad
+        });
+      } else {
+        this.items[idx].cantidad += cantidad;
+      }
+      return true;
     },
 
-    async remove(id) {
-      await api.delete(`/cart/${id}`);
-      this.items = this.items.filter(i => i.id !== id);
+    /* 3) Quitar línea */
+    async remove (productoId) {
+      await api.delete(`/cart/${productoId}`);     // DELETE /api/cart/:productoId
+      this.items = this.items.filter(i => i.productoId !== productoId);
     },
 
-    async clear() {
-      for (const i of this.items) await api.delete(`/cart/${i.id}`);
+    /* 4) Vaciar (después de checkout) */
+    async clear () {
+      const copia = [...this.items];
+      for (const i of copia) {
+        await api.delete(`/cart/${i.productoId}`);
+      }
       this.items = [];
     }
   }

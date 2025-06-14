@@ -1,0 +1,62 @@
+# ----------------------------------------------------------
+# Delichoc 3D – .htaccess para SPA Vue/Vite
+# ----------------------------------------------------------
+
+# --- Reescritura para Vue Router history-mode -------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Si el recurso solicitado existe (archivo o carpeta) lo servimos tal cual
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Todo lo demás → index.html (SPA entry-point)
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# --- Tipos MIME correctos ---------------------------------
+AddType application/javascript .js .mjs
+AddType text/css              .css
+AddType font/woff2            .woff2
+AddType font/woff             .woff
+AddType font/ttf              .ttf
+AddType image/svg+xml         .svg
+
+# --- Compresión gzip / Brotli ------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/javascript text/css application/json
+  AddOutputFilterByType DEFLATE font/woff2 font/woff
+</IfModule>
+
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript text/css application/json
+  AddOutputFilterByType BROTLI_COMPRESS font/woff2 font/woff
+</IfModule>
+
+# --- Cache estática ---------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Assets versionados (hash en el nombre) – cache 1 año
+  <FilesMatch "\.(js|css|mjs|woff2?|ttf|svg)$">
+    ExpiresDefault "access plus 1 year"
+    Header append Cache-Control "public, immutable"
+  </FilesMatch>
+
+  # index.html – que se vuelva a validar cada minuto
+  <FilesMatch "index\.html$">
+    ExpiresDefault "access plus 60 seconds"
+    Header set Cache-Control "no-transform, public, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# --- Seguridad básica -------------------------------------
+# Desactiva listado de directorios
+Options -Indexes
+
+# Oculta .env, fuentes de Vue, archivos de configuración
+<FilesMatch "^\.env|vite\.config\.|package\.json$">
+  Require all denied
+</FilesMatch>

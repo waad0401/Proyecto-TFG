@@ -1,4 +1,7 @@
 const express = require('express');
+const comments = require('./comments');
+
+
 const router  = express.Router();
 const {
   listProducts,
@@ -6,6 +9,9 @@ const {
   createProduct,
   updateProduct
 } = require('../controllers/productController');
+
+// Para el uso de comentarios en los productos
+router.use('/:id/comments', comments());
 
 router.get('/', listProducts);
 router.get('/:id', getProductById);

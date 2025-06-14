@@ -2,34 +2,58 @@
   <section class="container py-5">
     <h2 class="mb-4">Pago</h2>
 
-    <div v-if="!success">
-      <p class="lead">Total a pagar: <strong>{{ total.toFixed(2) }} €</strong></p>
-      <button class="btn btn-primary" @click="pay" :disabled="loading">
-        {{ loading ? 'Procesando…' : 'Confirmar pedido' }}
-      </button>
+    <!-- Pantalla de confirmación -->
+    <div v-if="exito" class="alert alert-success">
+      ¡Pedido realizado con éxito!
+      <RouterLink to="/">Volver a la tienda</RouterLink>
     </div>
 
-    <div v-else class="alert alert-success">
-      ¡Pedido realizado con éxito! <RouterLink to="/">Volver a la tienda</RouterLink>
+    <!-- Botón de pago -->
+    <div v-else>
+      <p class="lead">
+        Total a pagar:
+        <strong>{{ totalPrecio.toFixed(2) }} €</strong>
+      </p>
+      <button class="btn btn-primary" @click="pagar" :disabled="cargando">
+        {{ cargando ? 'Procesando…' : 'Confirmar pedido' }}
+      </button>
     </div>
   </section>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import api from '../services/api';
-import { useCartStore } from '../store/cart';
+import { useRouter } from 'vue-router';
+import api from '@/services/api';
+import { useCartStore } from '@/store/cart';
 
-const cart   = useCartStore();
-const total  = cart.totalPrice;
-const loading = ref(false);
-const success = ref(false);
+const cart        = useCartStore();
+const totalPrecio = cart.totalPrecio;              // getter ya en español
+const cargando    = ref(false);
+const exito       = ref(false);
+const router      = useRouter();
 
-async function pay () {
-  loading.value = true;
-  await api.post('/checkout');
-  await cart.clear();
-  success.value = true;
-  loading.value = false;
+async function pagar () {
+  if (!cart.items.length) return;                  // evita pedido vacío
+
+  cargando.value = true;
+
+  try {
+    /* preparamos payload: [{ productoId, cantidad, precio }] */
+    const items = cart.items.map(i => ({
+      productoId : i.productoId,
+      cantidad   : i.cantidad,
+      precio     : i.precio
+    }));
+
+    await api.post('/orders', { items, total: totalPrecio });
+    await cart.clear();
+    exito.value = true;
+  } catch (e) {
+    alert('Error al procesar el pedido');
+    console.error(e);
+  } finally {
+    cargando.value = false;
+  }
 }
 </script>
