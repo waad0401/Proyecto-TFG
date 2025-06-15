@@ -3,14 +3,7 @@
   hosts: middleware
   become: yes
 
-  vars:
-    src_dir:      "../../middleware"     # proyecto local
-    dest_dir:     "/opt/middleware"      # destino en el servidor
-    service_name: "middleware"           # systemd unit
-    app_entry:    "index.js"             # archivo principal
-    nvm_version:  "v0.40.2"
-    node_major:   "22"                   # Node v22.x
-    service_user: "{{ ansible_user }}"   # usuario SSH actual
+
   vars_files:
   - ../vars/vars.yaml
 

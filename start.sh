@@ -73,7 +73,8 @@ elif [[ $respuesta == 'y' ]]; then
 	cd terraform/
 	terraform init
 	terraform apply -auto-approve
-	# Now we change the ips of the Ansible invetory
+
+	# Obtenemos y cambiamos las ips de ansible
 	private_ip_nfs=$(terraform output --raw private_ip_nfs)
 	private_ip_frnt2=$(terraform output --raw private_ip_frontend-02)
 	private_ip_frnt1=$(terraform output --raw private_ip_frontend-01)
@@ -98,19 +99,23 @@ elif [[ $respuesta == 'y' ]]; then
 	sed -i "s/# CHANGE_BACK/$private_ip_back/" ansible/inventario/inventario
 	sed -i "s/# CHANGE_BACK/$private_ip_back/" ansible/vars/vars.yaml
 
-	# Now proceed with the ansible instalation
+	# Instalacion de ansible
 	ansible-playbook -i ansible/inventario/inventario ansible/main.yaml
 
-	# Now we need create the new ami with the frontend content
+	# Creamos la ami para la creacion de imagenes exactas para el auto-scaling
 	ami_id=$(aws ec2 create-image --name "AMI-RealOne" --instance-id $instance_id_01 --description "Prueba Creacion de AMI" --output text)
 
+	
+	
 	ansible-playbook -i ansible/inventario/inventario ansible/mainp2.yaml
+
+
 	# En los siguientes pasos crearemos un Aplication Loadbalancer, un grupo de destino y un listener para que redija el trafico
 	load_id=$(aws elbv2 create-load-balancer --name Loadbalancer --subnets $subred_1 $subred_2 --security-groups $sg_load_id \
 		--scheme internet-facing --type application --ip-address-type ipv4 --output text  | awk -F ' ' '/arn:/{print $6}')
 
-	# Now we proceed to create a launch-template and the auto-scaling-group
 
+	# Ahora creamos la plantilla y el  auto-scaling-group
 	template_id=$(aws ec2 create-launch-template --launch-template-name TheTemplate \
 	--launch-template-data "{ \"ImageId\": \"$ami_id\",\"InstanceType\": \"t2.small\", \"KeyName\": \"vockey\", 
 	\"SecurityGroupIds\": [\"$sg_load_id\"],\"TagSpecifications\":[{\"ResourceType\": \"instance\",\"Tags\":[{\"Key\": \"Proyecto\", \"Value\": \"TheProyect\"}]}] }" \
@@ -123,6 +128,7 @@ elif [[ $respuesta == 'y' ]]; then
 
 	auto_gp_id=$(aws autoscaling describe-auto-scaling-groups --output text | awk -F ' ' '/arn:/{print $2}')
 
+	# Ahora pedimos que el usuario reistre el dominio y cree un 
 	while [[ $confirmacion != 'Y' ]]; do
 		echo "Debe registrar este nombre de domininio antes de continuar"
 		read -p "Introduzaca 'Y' cuando lo haya realizado :" confirmacion

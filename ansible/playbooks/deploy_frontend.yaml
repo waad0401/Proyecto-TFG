@@ -34,12 +34,13 @@
       args:
         chdir: "{{ app_dir }}"
 
+    # 5) Creamos los ficheros estaticos
     - name: npm run build
       command: npm run build
       args:
         chdir: "{{ app_dir }}"
 
-    # 5) Publicar dist/ en /var/www/html
+    # 6) Publicar dist/ en /var/www/html
     - name: Copiar bundle a "/var/www/html"
       copy:
         src:  "{{ app_dir }}/dist/"
@@ -48,24 +49,6 @@
         remote_src: yes 
         recursive: yes             
         owner: www-data             
-        group: www-data
-
-
-    - name: Copiar las imagenes
-      synchronize:
-        src:  "../../frontend/imagenes/"
-        dest: "/var/www/imagenes/"
-        recursive: yes
-
-
-    # 6) Copiar .htaccess preexistente
-    - name: Copiar .htaccess
-      copy:
-        src:  "../conf/.htaccess"
-        dest: "/var/www/html/.htaccess"
-        owner: www-data
-        group: www-data
-        mode: "0644"
 
     # 7) Asegurar permisos finales
     - name: Ajustar permisos en "/var/www/html"

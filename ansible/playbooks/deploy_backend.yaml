@@ -2,9 +2,10 @@
 - name:
   hosts: backend
   become: yes
-  vars:
-    src_dir:  "../../backend"   # carpeta LOCAL con lanzar.sh
-    dest_dir: "/opt/proyecto"            # carpeta en el servidor
+
+
+  vars_files:
+    - ../vars/vars.yaml
 
   tasks:
     - name : Actulizamos los repositorios

@@ -24,7 +24,7 @@
 
     <!-- Vídeo corporativo -->
     <div class="ratio ratio-16x9 rounded shadow" data-aos="fade-up">
-      <iframe src="https://drive.google.com/file/d/1nCGB-hLvWQZbJxJ_qtqRrjv1QSzSkjyl/view?pli=1" title="Video corporativo"></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/VDgGhiFVmCo?si=Hg6fMQaEPAHjBm2D" title="Video corporativor" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </section>
 </template>
