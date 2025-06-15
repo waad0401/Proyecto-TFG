@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `orders` (
-  `id`         CHAR(36) PRIMARY KEY       DEFAULT (UUID()),
+  `id`         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   `usuario_id` INT NOT NULL,
   `total`      DECIMAL(12,2) NOT NULL,
   `fecha`      DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `carts` (
-  `id`         CHAR(36) PRIMARY KEY       DEFAULT (UUID()),
+  `id`         CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   `usuario_id` INT NOT NULL,
   `creado_en`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`usuario_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
@@ -56,7 +56,6 @@ CREATE TABLE IF NOT EXISTS `cart_items` (
   FOREIGN KEY (`producto_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `comments` (
   `id`          INT AUTO_INCREMENT PRIMARY KEY,
   `producto_id` INT  NOT NULL,
@@ -67,25 +66,24 @@ CREATE TABLE IF NOT EXISTS `comments` (
   FOREIGN KEY (`usuario_id`)  REFERENCES `users`   (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-
 INSERT INTO products (nombre, descripcion, precio, stock, imagen) VALUES
   ('Bombones Deluxe',
-   'Caja de bombones surtidos artesanales con rellenos de caramelo, praliné y licor',
+   'Caja de bombones surtidos artesanales con rellenos de caramelo, praline y licor',
    12.50, 0, 'bombones_deluxe.webp'),
   ('Tarta de Chocolate Triple',
-   'Porción de tarta de capas de bizcocho y ganache de chocolate extra oscuro',
+   'Porcion de tarta de capas de bizcocho y ganache de chocolate extra oscuro',
    15.00, 1, 'tarta_chocolate_triple.webp'),
   ('Cupcakes de Vainilla',
    'Cupcakes esponjosos de vainilla con frosting de crema de mantequilla y sprinkles',
    8.00, 80, 'cupcakes_vainilla.webp'),
   ('Macarons de Colores',
-   'Macarons franceses en surtido de pistacho, frambuesa, limón y mora',
+   'Macarons franceses en surtido de pistacho, frambuesa, limon y mora',
    10.00, 60, 'macarons_colores.webp'),
   ('Galletas de Mantequilla',
-   'Galletas caseras de mantequilla con un toque de vainilla y azúcar glas',
+   'Galletas caseras de mantequilla con un toque de vainilla y azucar glas',
    5.50, 120, 'galletas_mantequilla.webp'),
   ('Pastel de Frutos Rojos',
-   'Porción de pastel con mousse de frutas rojas y base de galleta crujiente',
+   'Porcion de pastel con mousse de frutas rojas y base de galleta crujiente',
    18.00, 30, 'pastel_frutos_rojos.webp'),
   ('Brownies con Nueces',
    'Brownies densos de chocolate con trozos de nueces y un ligero toque salado',
@@ -97,8 +95,8 @@ INSERT INTO products (nombre, descripcion, precio, stock, imagen) VALUES
    'Cheesecake cremoso con coulis de fresa fresca y crumble de galleta',
    16.50, 40, 'cheesecake_fresa.webp'),
   ('Caramelos Artesanales',
-   'Caramelos duros hechos a mano con sabores de manzana verde y limón',
+   'Caramelos duros hechos a mano con sabores de manzana verde y limon',
    6.00, 200, 'caramelos_artesanales.webp'),
   ('Surtido de bombones',
    'Distintos tipos de bombones, entre los que se encuentra sabor a fresa chocolate y licor',
-   12.50, 100, 'surtido_bombones.webp'),
+   12.50, 100, 'surtido_bombones.webp');
