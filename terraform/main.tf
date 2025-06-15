@@ -176,3 +176,7 @@ resource "aws_instance" "nfs" {
     Name = var.instancia_nfs
   }
 }
+
+resource "aws_eip" "ip_elastica" {
+  instance = aws_instance.middleware.id 
+}

@@ -1,5 +1,5 @@
 ---
-- name:
+- name: Despliege en el del la APP
   hosts: frontend_master
   become: yes
 
@@ -9,46 +9,35 @@
   tasks:
     - name: Sincronizar código fuente
       synchronize:
-        src:  "../../frontend/ecommerce-frontend"
+        src:  "../../frontend/delichoc3d"
         dest: "{{ app_dir }}/"
         recursive: yes
 
-    # 3) Reemplazar CHANGEME por la IP/dominio real
-    - name: Buscar archivos del proyecto
-      find:
-        paths: "/tmp"
-        recurse: yes
-        file_type: file
-      register: project_files
-
     - name: Sustituir CHANGEME → {{ ip_api }}
       replace:
-        path: "{{ item.path }}"
+        path: "{{ app_dir }}/delichoc3d/public/config.json"
         regexp: 'CHANGEME'
         replace: "{{ ip_api }}"
-      loop: "{{ project_files.files }}"
 
-    # 4) Instalar dependencias y compilar
+    # Instalar dependencias y compilar
     - name: npm install
-      command: npm install --omit=dev
+      command: sudo npm install
       args:
-        chdir: "{{ app_dir }}"
+        chdir: "{{ app_dir }}/delichoc3d/"
 
     # 5) Creamos los ficheros estaticos
     - name: npm run build
       command: npm run build
       args:
-        chdir: "{{ app_dir }}"
+        chdir: "{{ app_dir }}/delichoc3d/"
+
+    - name: borrar conteido previo
+      ansible.builtin.command: >
+        sudo rm -rf /var/www/html/*
 
     # 6) Publicar dist/ en /var/www/html
-    - name: Copiar bundle a "/var/www/html"
-      copy:
-        src:  "{{ app_dir }}/dist/"
-        dest: "/var/www/html"
-        recursive: yes
-        remote_src: yes 
-        recursive: yes             
-        owner: www-data             
+    - name: Copiar todo a "/var/www/html"
+      shell: sudo cp -r "{{ app_dir }}/delichoc3d/dist/"* /var/www/html
 
     # 7) Asegurar permisos finales
     - name: Ajustar permisos en "/var/www/html"

@@ -1,5 +1,5 @@
 ---
-- name:
+- name: Instalacion basica del frontend
   hosts: frontend
   become: yes
 
@@ -23,19 +23,44 @@
         src: ../conf/000-default.conf
         dest: /etc/apache2/sites-available/
         mode: 0755
-    - name: Instalar NVM 
-      shell: |
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-      args:
-        creates: '\. "$HOME/.nvm/nvm.sh"'
 
-    - name: Instalar Node.js 22 via NVM
-      shell: |
-        export NVM_DIR="$HOME/.nvm"
-        . "$NVM_DIR/nvm.sh"
-        nvm install 22
-      args:
-        executable: /bin/bash
+    - name: Descargar Node.js v22.16.0
+      ansible.builtin.get_url:
+        url: https://nodejs.org/dist/v22.16.0/node-v22.16.0-linux-x64.tar.xz
+        dest: /tmp/node-v22.16.0-linux-x64.tar.xz
+        mode: '0644'
+
+
+    - name: Crear directorio de instalación
+      ansible.builtin.file:
+        path: /usr/local/node-v22.16.0-linux-x64
+        state: directory
+        mode: '0755'
+
+    - name: Extraer Node.js en /usr/local
+      ansible.builtin.unarchive:
+        src: /tmp/node-v22.16.0-linux-x64.tar.xz
+        dest: /usr/local
+        remote_src: yes
+
+
+    - name: Ajustar propiedad de los archivos
+      ansible.builtin.file:
+        path: /usr/local/node-v22.16.0-linux-x64
+        owner: root
+        group: root
+        recurse: yes
+
+
+    - name: Enlazar binarios en /usr/local/bin
+      ansible.builtin.file:
+        src: /usr/local/node-v22.16.0-linux-x64/bin/{{ item }}
+        dest: /usr/local/bin/{{ item }}
+        state: link
+        force: yes
+      loop:
+        - node
+        - npm
 
     - name : Reinicamos el apache
       service:

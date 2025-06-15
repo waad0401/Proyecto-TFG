@@ -7,17 +7,13 @@ const routes = [
   { path: '/products/:id', component: () => import('@/components/ProductDetail.vue') },
 
   { path: '/cart',     component: () => import('@/components/Cart.vue') },
-  { path: '/checkout', component: () => import('@/components/Checkout.vue'),
-                        meta: { requiresAuth: true } },
+  { path: '/checkout', component: () => import('@/components/Checkout.vue'), meta: { requiresAuth: true } },
 
-  { path: '/orders',   component: () => import('@/components/OrderHistory.vue'),
-                        meta: { requiresAuth: true } },
+  { path: '/orders',   component: () => import('@/components/OrderHistory.vue'), meta: { requiresAuth: true } },
 
   /*  páginas de invitado  */
-  { path: '/auth/login',    component: () => import('@/components/Login.vue'),
-                             meta: { guestOnly: true } },
-  { path: '/auth/register', component: () => import('@/components/Register.vue'),
-                             meta: { guestOnly: true } },
+  { path: '/auth/login',    component: () => import('@/components/Login.vue'), meta: { guestOnly: true } },
+  { path: '/auth/register', component: () => import('@/components/Register.vue'), meta: { guestOnly: true } },
 
   /* 404 opcional */
   { path: '/:pathMatch(.*)*', redirect: '/' }

@@ -11,6 +11,10 @@ output "private_ip_middleware" {
   value = aws_instance.middleware.private_ip
 }
 
+output "public_ip_middleware" {
+  value = aws_eip.ip_elastica.public_ip
+}
+
 output "private_ip_frontend-01" {
   value = aws_instance.frontend-01.private_ip
 }

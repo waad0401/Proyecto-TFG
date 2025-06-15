@@ -1,2 +1,1 @@
 /var/www/html FRONTEND_NETWORK(rw,sync,no_root_squash,no_subtree_check)
-/var/www/images FRONTEND_NETWORK(rw,sync,no_root_squash,no_subtree_check)

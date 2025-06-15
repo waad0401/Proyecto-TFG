@@ -2,11 +2,12 @@ nfs:
   frontend_network: "172.31.0.0/16"
   server: # CHANGE_NFS_1
 ip_api: # CHANGE_MIDDLE
- app_dir: "/opt/frontend" 
+ip_back: # CHANGE_BACK
+app_dir: "/opt/frontend" 
 src_dir: "../../middleware" 
-dest_dir: "/opt/middleware"
+dest_dir: "/opt/middleware/"
 service_name: "middleware" 
-ip_back: 172.31.80.221
+
 app_entry: "index.js"
 nvm_version:  "v0.40.2"
 node_major: "22" 

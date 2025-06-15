@@ -1,15 +1,14 @@
-// src/services/api.js
 import axios from 'axios';
 
 // configuracion vacia que mas adelante se llenara
 export const config = {
-  apiBaseUrl:   '',
-  imageBaseUrl: ''
+  apiBaseUrl:  import.meta.env.VITE_API_DEFAULT,
+  imageBaseUrl: import.meta.env.VITE_IMG_DEFAULT
 };
 
 export const api = axios.create({
-  baseURL: '',          // Se sobre escribe con el
-  timeout: 10_000
+  baseURL: config.apiBaseUrl,         // Se sobre escribe con el
+  timeout: 10000
 });
 
 // JWT

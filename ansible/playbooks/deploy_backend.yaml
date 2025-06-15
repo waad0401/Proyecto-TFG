@@ -1,5 +1,5 @@
 ---
-- name:
+- name: Despliege del backend
   hosts: backend
   become: yes
 
@@ -20,19 +20,19 @@
     # 1) Copiar todo el directorio al servidor
     - name: Sincronizar {{ src_dir }} → {{ dest_dir }}
       synchronize:
-        src:  "{{ src_dir }}/"
-        dest: "{{ dest_dir }}/"
+        src:  "../../backend"
+        dest: "/opt/"
         recursive: yes
         delete: yes
 
     # 2) Asegurar permisos de ejecución en lanzar.sh
     - name: Dar permisos +x a lanzar.sh
       file:
-        path: "{{ dest_dir }}/lanzar.sh"
+        path: "/opt/backend/lanzar.sh"
         mode: "0755"
 
     # 3) Ejecutar el script
     - name: Ejecutar lanzar.sh
-      shell: ./lanzar.sh
+      shell: sudo ./lanzar.sh
       args:
-        chdir: "{{ dest_dir }}"
+        chdir: "/opt/backend"

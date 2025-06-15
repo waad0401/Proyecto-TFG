@@ -2,13 +2,11 @@
 - name: Desplegar middleware Node.js y dejarlo corriendo como servicio
   hosts: middleware
   become: yes
-
-
   vars_files:
   - ../vars/vars.yaml
 
   tasks:
-  # 1 ▸ Copiar el código al host
+  # Copiar el código al host
   - name: Copiar proyecto al servidor
     synchronize:
       src:  "{{ src_dir }}/"
@@ -16,7 +14,7 @@
       recursive: yes
       delete: yes
 
-  # 2 ▸ Sustituir CHANGEME en .env
+  #Sustituir CHANGEME en .env
   - name: Reemplazar CHANGEME en .env
     replace:
       path: "{{ dest_dir }}/src/.env"
@@ -24,76 +22,83 @@
       replace: "{{ ip_back }}"
       backup: yes
 
-  - name: Reemplazar CHANGEME en .env
-    replace:
-      path: "{{ dest_dir }}/.env"
-      regexp: 'CHANGEME'
-      replace: "{{ ip_back }}"
-      backup: yes
-
-  # 3 ▸ Instalar cliente MySQL (CLI) por si se necesita
+  # Instalacion de cliente mysql
   - name: Instalar cliente MySQL en Debian/Ubuntu
     apt:
       name: default-mysql-client
       state: present
       update_cache: yes
-    when: ansible_os_family == "Debian"
 
-  - name: Instalar cliente MySQL en RHEL/Alma/Rocky
-    yum:
-      name: mysql
-      state: present
-    when: ansible_os_family == "RedHat"
+  # Instalacion de node
+  - name: Descargar Node.js v22.16.0
+    ansible.builtin.get_url:
+      url: https://nodejs.org/dist/v22.16.0/node-v22.16.0-linux-x64.tar.xz
+      dest: /tmp/node-v22.16.0-linux-x64.tar.xz
+      mode: '0644'
 
-  # 4 ▸ Instalar NVM (solo si falta)
-  - name: Instalar NVM {{ nvm_version }}
-    shell: |
-      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash
+
+  - name: Crear directorio de instalación
+    ansible.builtin.file:
+      path: /usr/local/node-v22.16.0-linux-x64
+      state: directory
+      mode: '0755'
+
+  - name: Extraer Node.js en /usr/local
+    ansible.builtin.unarchive:
+      src: /tmp/node-v22.16.0-linux-x64.tar.xz
+      dest: /usr/local
+      remote_src: yes
+
+
+  - name: Ajustar propiedad de los archivos
+    ansible.builtin.file:
+      path: /usr/local/node-v22.16.0-linux-x64
+      owner: root
+      group: root
+      recurse: yes
+
+
+  - name: Enlazar binarios en /usr/local/bin
+    ansible.builtin.file:
+      src: /usr/local/node-v22.16.0-linux-x64/bin/{{ item }}
+      dest: /usr/local/bin/{{ item }}
+      state: link
+      force: yes
+    loop:
+      - node
+      - npm
+
+
+  - name: npm install
+    command: sudo npm install
     args:
-      creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-    become: false
+      chdir: "{{ dest_dir }}/src"
 
-  # 5 ▸ Instalar Node {{ node_major }} con NVM
-  - name: Instalar Node {{ node_major }} via NVM
-    shell: |
-      . "$HOME/.nvm/nvm.sh"
-      nvm install {{ node_major }}
-    args:
-      executable: /bin/bash
-    become: false
-
-  # 6 ▸ Instalar dependencias npm
-  - name: npm install --omit=dev
-    shell: |
-      . "$HOME/.nvm/nvm.sh"
-      cd "{{ dest_dir }}"
-      npm install --omit=dev
-    args:
-      executable: /bin/bash
-    become: false
-
-  # 7 ▸ Crear servicio systemd
+  # Crear servicio systemd
   - name: Crear servicio systemd {{ service_name }}
     copy:
       dest: "/etc/systemd/system/{{ service_name }}.service"
       mode: "0644"
       content: |
         [Unit]
-        Description=Middleware Node.js ({{ service_name }})
+        Description=Middleware Node.js Service
         After=network.target
 
         [Service]
-        ExecStart=/bin/bash -c '. $HOME/.nvm/nvm.sh && node {{ dest_dir }}/{{ app_entry }}'
-        WorkingDirectory={{ dest_dir }}
-        User={{ service_user }}
+        Type=simple
+        User=ubuntu
+        WorkingDirectory=/opt/middleware/src
+        Environment="PATH=/home/ubuntu/.nvm/versions/node/v22.16.0/bin:/usr/bin:/usr/local/bin"
+        ExecStart=/usr/local/bin/node /opt/middleware/src/index.js
         Restart=on-failure
-        Environment=NODE_ENV=production
-        LimitNOFILE=65535
+        RestartSec=5
 
         [Install]
         WantedBy=multi-user.target
 
-  # 8 ▸ Recargar systemd y arrancar
+
+
+  # Recargar systemd y arrancar
   - name: Habilitar y arrancar {{ service_name }}
     systemd:
       daemon_reload: yes

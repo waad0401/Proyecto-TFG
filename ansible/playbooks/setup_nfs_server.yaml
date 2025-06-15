@@ -22,14 +22,7 @@
         state: directory
         owner: nobody
         group: nogroup
-      
-    - name: Creamos los directorios
-      file:
-        path: /var/www/images
-        state: directory
-        owner: nobody
-        group: nogroup
-    
+
     - name: Importamos el nuestro archivo exports
       copy:
         src: ../nfs/exports
