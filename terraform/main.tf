@@ -6,6 +6,10 @@ terraform {
     }
   }
 }
+
+provider "aws" {
+  region = var.region
+}
 # obtencion de datos que estan por defecto
 data "aws_vpc" "default" { 
  default = true

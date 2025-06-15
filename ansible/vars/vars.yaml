@@ -1,13 +1,13 @@
 nfs:
   frontend_network: "172.31.0.0/16"
-  server: 172.31.28.63
-ip_api: 172.31.80.221
-app_dir: "/opt/frontend" 
-src_dir:      "../../middleware"     # proyecto local
-dest_dir:     "/opt/middleware"      # destino en el servidor
-service_name: "middleware"           # systemd unit
+  server: # CHANGE_NFS_1
+ip_api: # CHANGE_MIDDLE
+ app_dir: "/opt/frontend" 
+src_dir: "../../middleware" 
+dest_dir: "/opt/middleware"
+service_name: "middleware" 
 ip_back: 172.31.80.221
-app_entry:    "index.js"             # archivo principal
+app_entry: "index.js"
 nvm_version:  "v0.40.2"
-node_major:   "22"                   # Node v22.x
-service_user: "{{ ansible_user }}"   # usuario SSH actual
+node_major: "22" 
+service_user: "{{ ansible_user }}"  
