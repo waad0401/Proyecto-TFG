@@ -68,24 +68,37 @@ CREATE TABLE IF NOT EXISTS `comments` (
 ) ENGINE = InnoDB;
 
 
-INSERT INTO `products` (`nombre`, `descripcion`, `precio`, `stock`, `imagen`)
-VALUES
-  ('Cigarrillos Red 20',
-   'Cajetilla de 20 cigarrillos con mezcla rubia clásica y filtro estándar.',
-   5.20, 500, 'cigarrillos_red20.jpg'),
-
-  ('Amphora',
-   'Paquete de Amphora, un tabaco masticable de lo más exquisito.',
-   7.75, 300, 'amphora_tabaco_masticable.jpg'),
-
-  ('Frasco de nicotina',
-   'Frasco de nicotina para su libre uso y consumo.',
-   1.30, 800, 'tabaco_liquid.jpg'),
-
-  ('Aandria PACK',
-   'Paquete con 5 cajetillas de Aandria.',
-   1.90, 0, 'aandria_paquete.jpg'),
-
-  ('Cenicero metálico',
-   'Cenicero metálico de latón con decoración victoriana.',
-   3.50, 200, 'cenicero_metalico.jpg');
+INSERT INTO products (nombre, descripcion, precio, stock, imagen) VALUES
+  ('Bombones Deluxe',
+   'Caja de bombones surtidos artesanales con rellenos de caramelo, praliné y licor',
+   12.50, 0, 'bombones_deluxe.webp'),
+  ('Tarta de Chocolate Triple',
+   'Porción de tarta de capas de bizcocho y ganache de chocolate extra oscuro',
+   15.00, 1, 'tarta_chocolate_triple.webp'),
+  ('Cupcakes de Vainilla',
+   'Cupcakes esponjosos de vainilla con frosting de crema de mantequilla y sprinkles',
+   8.00, 80, 'cupcakes_vainilla.webp'),
+  ('Macarons de Colores',
+   'Macarons franceses en surtido de pistacho, frambuesa, limón y mora',
+   10.00, 60, 'macarons_colores.webp'),
+  ('Galletas de Mantequilla',
+   'Galletas caseras de mantequilla con un toque de vainilla y azúcar glas',
+   5.50, 120, 'galletas_mantequilla.webp'),
+  ('Pastel de Frutos Rojos',
+   'Porción de pastel con mousse de frutas rojas y base de galleta crujiente',
+   18.00, 30, 'pastel_frutos_rojos.webp'),
+  ('Brownies con Nueces',
+   'Brownies densos de chocolate con trozos de nueces y un ligero toque salado',
+   9.90, 110, 'brownies_nueces.webp'),
+  ('Trufas de Chocolate Negro',
+   'Trufas intensas de chocolate negro recubiertas de cacao amargo',
+   11.00, 90, 'trufas_chocolate_negro.webp'),
+  ('Cheesecake con Fresa',
+   'Cheesecake cremoso con coulis de fresa fresca y crumble de galleta',
+   16.50, 40, 'cheesecake_fresa.webp'),
+  ('Caramelos Artesanales',
+   'Caramelos duros hechos a mano con sabores de manzana verde y limón',
+   6.00, 200, 'caramelos_artesanales.webp'),
+  ('Surtido de bombones',
+   'Distintos tipos de bombones, entre los que se encuentra sabor a fresa chocolate y licor',
+   12.50, 100, 'surtido_bombones.webp'),
