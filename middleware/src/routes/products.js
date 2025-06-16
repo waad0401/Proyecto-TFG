@@ -16,7 +16,7 @@ router.use('/:id/comments', comments());
 router.get('/', listProducts);
 router.get('/:id', getProductById);
 
-// CRUD opcional (protegido con auth / admin)
+// No empleados 100% 
 router.post('/',  createProduct);
 router.put('/:id', updateProduct);
 
