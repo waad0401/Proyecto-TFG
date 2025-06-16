@@ -1,38 +1,17 @@
-# PR
-
-Para sacar el private ip y meterlo en una variable use lo siguiente:
+# Readme GENERAL
+Explicacion de uso, bastara con lanzar si deseas desplegar esta misma app que se te ofrece.  
+Si deseas la app por defecto que creamos simplemente lanza:  
+```bash
+./start.sh
 ```
-$ip_nfs = $(terraform output --raw private_ip_nfs)
+En el caso de que desees usar nuestra app como plantilla pero usar nuestra api y demas:  
+Bastara con simplmente cambiar la forma de la app manteniendo las llamdas de la api y los productos de la BD, y entonce lanzar:
+```bash
+./start.sh
 ```
-La salida de eso es solo la ip privada del NFS server, se puede aplicar de la misma manera dependiendo del lo que tengas en el **outputs.tf** de terraform, alamacena como una especie de datos y los puedes llamar cuando quieras y dale el formato deseado
-
-## COSAS POR HACER
-[x] Terraform
-[] Ansible
-[]	├─ deploy_backend.yaml
-[]	├─ deploy_frontend.yaml
-[]	├─ install_backend.yaml 
-[x]	├─ install_frontend.yaml
-[x]	├─ plantilla.yaml
-[x]	├─ setup_nfs_client.yaml
-[x]	└─ setup_nfs_server.yaml
-
-[] Script Automatizacion
-[] La pagina Web
-[] El backend
-[] Loadbalancer y grupo destino
-[] El AUTO-SCALING
-
-
-para instalar el angular: npm install -g @angular/cli
-
-
-sudo apt-get install -y curl
-curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
-sudo -E bash nodesource_setup.sh
-sudo apt-get install -y nodejs
-node -v
-Info sacada de aqui: https://github.com/nodesource/distributions/blob/master/README.md
-
-Cuenta dns
-mmb18963@toaik.com
+  
+En caso que solo desee que le montemos la infra estructura debera comentar ciertas partes del ./start.sh, para que solo lanzar la infraestrucura.
+Y entonce lanzar  
+```bash
+./start.sh
+```
