@@ -1,8 +1,8 @@
 nfs:
   frontend_network: "172.31.0.0/16"
-  server: # CHANGE_NFS_1
-ip_api: # CHANGE_MIDDLE
-ip_back: # CHANGE_BACK
+  server: 172.31.94.237
+ip_api: 3.217.29.70
+ip_back: 172.31.86.236
 app_dir: "/opt/frontend" 
 src_dir: "../../middleware" 
 dest_dir: "/opt/middleware/"

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
 import { useAuthStore } from '@/store/auth';
+import router        from '@/router';
 
 export const useCartStore = defineStore('cart', {
   /* ---------- state ---------- */
@@ -35,8 +36,13 @@ export const useCartStore = defineStore('cart', {
 
       if (!auth.isAuthenticated) {
         alert('Debes iniciar sesión para comprar');
-        window.location.href = '/auth/login';
-        return false;                              // indica redirección
+        return router.push({ path: '/auth/login', query: { redirect: router.currentRoute.value.fullPath } });
+       // Navega al login y corta la ejecución
+        router.push({
+          path: '/auth/login',
+          query: { redirect: router.currentRoute.value.fullPath }
+        });
+       return false;
       }
 
       await api.post('/cart', {                    // POST /api/cart
